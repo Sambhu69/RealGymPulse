@@ -1,0 +1,16 @@
+# Build artifacts
+*.class
+src/main/webapp/WEB-INF/classes/
+
+# External tools (Tomcat, JDK)
+tooling/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store

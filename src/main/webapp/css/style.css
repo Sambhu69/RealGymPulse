@@ -1,0 +1,1022 @@
+/* ============================================================
+   GymPulse — Complete Design System
+   Pure CSS · No Bootstrap · CSS Custom Properties + Flexbox/Grid
+   ============================================================ */
+
+/* ---------- Design Tokens ---------- */
+:root {
+    --primary: #111111;
+    --primary-dark: #000000;
+    --accent: #222222;
+    --accent-dark: #000000;
+    --light: #f8f9fa;
+    --white: #ffffff;
+    --success: #198754;
+    --success-light: #d1e7dd;
+    --warning: #ffc107;
+    --warning-light: #fff3cd;
+    --danger: #dc3545;
+    --danger-light: #f8d7da;
+    --text: #212529;
+    --text-muted: #6c757d;
+    --border: #dee2e6;
+    --shadow: none;
+    --shadow-lg: none;
+    --radius: 4px;
+    --radius-lg: 8px;
+    --transition: all 0.25s ease;
+}
+
+/* ---------- Global Reset ---------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* ---------- Navigation ---------- */
+.nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 0 32px;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+}
+
+.nav-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 1px;
+}
+
+.nav-brand span {
+    color: var(--accent);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    transition: var(--transition);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+}
+
+.nav-link.logout-link {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+.nav-link.logout-link:hover {
+    background-color: var(--accent-dark);
+}
+
+.nav-user {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    margin-right: 8px;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+}
+
+.hamburger span {
+    display: block;
+    width: 26px;
+    height: 3px;
+    background-color: var(--white);
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+/* ---------- Auth Pages ---------- */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light);
+    padding: 24px;
+}
+
+.auth-card {
+    background-color: var(--white);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 420px;
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.auth-card h2 {
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--primary);
+    font-size: 1.8rem;
+}
+
+.auth-card .subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    font-size: 0.9rem;
+}
+
+.auth-card .auth-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.auth-card .auth-footer a {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.auth-card .auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- Forms ---------- */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--text);
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    color: var(--text);
+    background-color: var(--white);
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+    display: inline-block;
+    padding: 10px 24px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-dark);
+}
+
+.btn-secondary {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-success {
+    background-color: var(--success);
+    color: var(--white);
+}
+
+.btn-success:hover {
+    filter: brightness(0.9);
+}
+
+.btn-danger {
+    background-color: var(--danger);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    filter: brightness(0.9);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+}
+
+.btn-outline:hover {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+.btn-small {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+}
+
+.btn-block {
+    width: 100%;
+    display: block;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    outline: none;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* ---------- Alerts ---------- */
+.alert {
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-left: 4px solid;
+}
+
+.alert-error {
+    background-color: var(--danger-light);
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.alert-success {
+    background-color: var(--success-light);
+    color: var(--success);
+    border-color: var(--success);
+}
+
+.alert-warning {
+    background-color: var(--warning-light);
+    color: var(--warning);
+    border-color: var(--warning);
+}
+
+/* ---------- Page Layout ---------- */
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    flex: 1;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    color: var(--primary);
+}
+
+/* ---------- Cards ---------- */
+.card {
+    background-color: var(--white);
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.card h3 {
+    margin-bottom: 16px;
+    color: var(--primary);
+    font-size: 1.15rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+/* ---------- Stats Grid ---------- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background-color: var(--white);
+    padding: 28px 20px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    border-top: 4px solid var(--accent);
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stat-card:hover {
+    transform: scale(1.02);
+    border-color: var(--primary);
+}
+
+.stat-card .stat-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.stat-card h2 {
+    font-size: 2.2rem;
+    color: var(--accent);
+    margin-bottom: 4px;
+}
+
+.stat-card p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ---------- Quick Actions ---------- */
+.quick-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+}
+
+/* ---------- Tables ---------- */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+}
+
+tbody tr:hover {
+    background-color: rgba(236, 240, 241, 0.5);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ---------- Badges ---------- */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.badge-success {
+    background-color: var(--success-light);
+    color: var(--success);
+}
+
+.badge-danger {
+    background-color: var(--danger-light);
+    color: var(--danger);
+}
+
+.badge-warning {
+    background-color: var(--warning-light);
+    color: var(--warning);
+}
+
+.badge-secondary {
+    background-color: #eee;
+    color: var(--text-muted);
+}
+
+/* ---------- Class Grid ---------- */
+.class-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.class-card {
+    background-color: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    padding: 24px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.class-card:hover {
+    transform: scale(1.02);
+    border-color: var(--primary);
+}
+
+.class-card h4 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: var(--primary);
+}
+
+.class-card .class-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.class-card .class-meta strong {
+    color: var(--text);
+}
+
+.class-card .class-capacity {
+    font-size: 0.82rem;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ---------- Welcome Banner ---------- */
+.welcome-banner {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 28px;
+}
+
+.welcome-banner h1 {
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+}
+
+.welcome-banner p {
+    opacity: 0.8;
+    font-size: 0.95rem;
+}
+
+/* ---------- Membership Card ---------- */
+.membership-card {
+    background-color: var(--success);
+    color: var(--white);
+    padding: 28px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 28px;
+}
+
+.membership-card.inactive {
+    background-color: var(--text-muted);
+}
+
+.membership-card h3 {
+    color: var(--white);
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+.membership-card .membership-details {
+    display: flex;
+    gap: 32px;
+    font-size: 0.9rem;
+}
+
+.membership-card .membership-details span {
+    opacity: 0.9;
+}
+
+/* ---------- Section Titles ---------- */
+.section-title {
+    font-size: 1.3rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent);
+    display: inline-block;
+}
+
+/* ---------- Collapsible ---------- */
+.collapsible-toggle {
+    cursor: pointer;
+    user-select: none;
+}
+
+.collapsible-content {
+    display: none;
+}
+
+.collapsible-content.open {
+    display: block;
+}
+
+/* ---------- Search Bar ---------- */
+.search-bar {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* ---------- Edit Form Inline ---------- */
+.edit-form {
+    background-color: #fafafa;
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+}
+
+/* ---------- Profile Tabs ---------- */
+.profile-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+    background-color: var(--primary);
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding: 24px 20px;
+    margin-top: auto;
+    font-size: 0.88rem;
+}
+
+.footer-links {
+    margin-top: 8px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 12px;
+    transition: var(--transition);
+    font-size: 0.82rem;
+}
+
+.footer-links a:hover {
+    color: var(--white);
+}
+
+/* ---------- Error Pages ---------- */
+.error-container {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.error-container h1 {
+    font-size: 6rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.error-container h2 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.error-container p {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    max-width: 450px;
+}
+
+/* ---------- About & Contact Pages ---------- */
+.about-section,
+.contact-section {
+    margin-bottom: 40px;
+}
+
+.about-section h2,
+.contact-section h2 {
+    color: var(--primary);
+    margin-bottom: 16px;
+}
+
+.instructor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.instructor-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    text-align: center;
+}
+
+.instructor-card h4 {
+    margin-bottom: 4px;
+    color: var(--primary);
+}
+
+.instructor-card p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.facility-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.facility-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.facility-item .facility-icon {
+    font-size: 1.8rem;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 32px;
+}
+
+.contact-info-card {
+    background: var(--primary);
+    color: var(--white);
+    padding: 28px;
+    border-radius: var(--radius-lg);
+}
+
+.contact-info-card h3 {
+    color: var(--white);
+    margin-bottom: 20px;
+}
+
+.contact-info-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+/* ---------- Responsive: Tablet ---------- */
+@media (max-width: 992px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .class-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .instructor-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- Responsive: Mobile ---------- */
+@media (max-width: 768px) {
+    .nav-bar {
+        padding: 0 16px;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background-color: var(--primary-dark);
+        padding: 16px;
+        gap: 4px;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .nav-links.nav-open {
+        display: flex;
+    }
+
+    .nav-link {
+        width: 100%;
+        padding: 12px 16px;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-user {
+        display: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .class-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-card {
+        width: 90%;
+        padding: 28px 24px;
+    }
+
+    .page-container {
+        padding: 20px 16px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .quick-actions {
+        flex-direction: column;
+    }
+
+    .quick-actions .btn {
+        width: 100%;
+    }
+
+    .instructor-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .facility-list {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .welcome-banner {
+        padding: 24px;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.3rem;
+    }
+
+    .membership-card .membership-details {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card h2 {
+        font-size: 1.8rem;
+    }
+}
+
+/* ---------- Utility ---------- */
+
+/* Brand accent colour (replaces inline style on auth pages) */
+.brand-accent {
+    color: #e63946;
+}
+
+/* Hidden helper (replaces inline style="display:none") */
+.hidden {
+    display: none;
+}
+
+/* Read-only field appearance (replaces inline style on profile page) */
+.field-readonly {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    color: var(--text-muted);
+}
+
+/* Profile image upload section */
+.profile-image-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.profile-img-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+}
+
+.profile-img-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    background-color: #f5f5f5;
+}
+
+/* Inline form (e.g., small book button inside a table cell) */
+.form-inline {
+    display: inline;
+}
+
+/* Spacing helpers */
+.mt-20 {
+    margin-top: 20px;
+}
+
+/* Section divider (replaces <hr style="margin: 20px 0">) */
+.section-divider {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid var(--border);
+}
+
+/* Vertically resizable textarea (replaces style="resize:vertical") */
+.textarea-resize-v {
+    resize: vertical;
+}
+
+/* ============================================================
+   Dark Theme — Tailwind-Based Pages (header/footer/dashboard)
+   Moved from embedded <style> blocks in header.jsp for compliance
+   ============================================================ */
+
+/* Dark body override (applied when Tailwind dark theme is active) */
+.dark body,
+html.dark body {
+    background-color: #09090b;
+    color: white;
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border-radius: 10px;
+}
+
+/* Active Navigation Tab */
+.nav-tab-active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
