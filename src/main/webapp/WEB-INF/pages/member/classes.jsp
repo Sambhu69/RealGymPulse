@@ -16,8 +16,8 @@
         <h1>Available Fitness Classes</h1>
     </div>
 
-    <c:if test="${param.success == 'booked'}"><div class="alert alert-success">Class booked successfully!</div></c:if>
-    <c:if test="${param.error == 'alreadybooked'}"><div class="alert alert-error">You have already booked this class.</div></c:if>
+    <!-- Flash messages are handled by the global toast system in footer.jsp -->
+
 
     <c:choose>
         <c:when test="${not empty availableClasses}">

@@ -32,15 +32,7 @@
         </div>
     </div>
 
-    <!-- Flash Messages -->
-    <div class="space-y-3 mb-8">
-        <c:if test="${param.success == 'deleted'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Member deleted successfully.</div></c:if>
-        <c:if test="${param.success == 'updated'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Member updated successfully.</div></c:if>
-        <c:if test="${param.success == 'password_changed'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Password changed successfully.</div></c:if>
-        <c:if test="${param.error == 'delete_failed'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">Failed to delete member.</div></c:if>
-        <c:if test="${param.error == 'invalid_data'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">Invalid input data.</div></c:if>
-        <c:if test="${param.error == 'weak_password'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">Password too weak. Min 8 chars, 1 upper, 1 number, 1 special char.</div></c:if>
-    </div>
+    <!-- Flash messages are handled by the global toast system in footer.jsp -->
 
     <!-- Edit Form (shown when member is selected for view) -->
     <c:if test="${member != null}">

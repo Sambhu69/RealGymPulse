@@ -49,6 +49,10 @@ public class MemberDashboardServlet extends HttpServlet {
         List<BookingModel> myBookings = classService.getBookingsByUser(loggedUser.getUserId());
         request.setAttribute("myBookings", myBookings);
 
+        // Trainer bookings
+        com.gympulse.service.TrainerService ts = new com.gympulse.service.TrainerService();
+        request.setAttribute("trainerBookings", ts.getMemberTrainerBookings(loggedUser.getUserId()));
+
         request.setAttribute("loggedUser", loggedUser);
         request.getRequestDispatcher("/WEB-INF/pages/member/dashboard.jsp").forward(request, response);
     }

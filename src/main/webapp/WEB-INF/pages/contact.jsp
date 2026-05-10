@@ -104,12 +104,8 @@
                     <h3 class="text-xl font-bold text-white mb-2">Send Us a Message</h3>
                     <p class="text-zinc-500 text-sm mb-8">Fill out the form below and we'll reach out as soon as possible.</p>
 
-                    <c:if test="${param.success == 'message_sent'}">
-                        <div class="mb-6 px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-                            <p class="font-medium text-sm">Thank you! Your message has been received. We'll get back to you shortly.</p>
-                        </div>
-                    </c:if>
+                    <!-- Flash messages are handled by the global toast system in footer.jsp -->
+
 
                     <form action="${pageContext.request.contextPath}/contact" method="POST" class="space-y-5">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">

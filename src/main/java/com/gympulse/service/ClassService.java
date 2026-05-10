@@ -131,20 +131,37 @@ public class ClassService {
         }
     }
 
-    public boolean cancelBooking(int bookingId, int classId) {
+    public boolean cancelBooking(int bookingId, int classId, int userId) {
         Connection conn = null;
         try {
             conn = DBConfig.getConnection();
             conn.setAutoCommit(false);
 
-            // 1. Update booking status
+            // 1. Verify owner and status
+            String checkSql = "SELECT status FROM class_bookings WHERE booking_id = ? AND user_id = ? FOR UPDATE";
+            try (PreparedStatement pst = conn.prepareStatement(checkSql)) {
+                pst.setInt(1, bookingId);
+                pst.setInt(2, userId);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    if ("cancelled".equals(rs.getString("status"))) {
+                        conn.rollback();
+                        return false;
+                    }
+                } else {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // 2. Update booking status
             String cancelSql = "UPDATE class_bookings SET status = 'cancelled' WHERE booking_id = ?";
             try (PreparedStatement pst = conn.prepareStatement(cancelSql)) {
                 pst.setInt(1, bookingId);
                 pst.executeUpdate();
             }
 
-            // 2. Decrement enrolled and reset status
+            // 3. Decrement enrolled and reset status
             String decrementSql = "UPDATE fitness_classes SET enrolled = enrolled - 1, status = 'available' WHERE class_id = ?";
             try (PreparedStatement pst = conn.prepareStatement(decrementSql)) {
                 pst.setInt(1, classId);

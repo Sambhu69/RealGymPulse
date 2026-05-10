@@ -13,34 +13,25 @@
 
 <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 pb-36">
 
-    <!-- Flash Messages -->
-    <c:if test="${param.success == 'booked'}">
-        <div class="mb-6 px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md">
-            <p class="font-medium text-sm">Class booked successfully!</p>
-        </div>
-    </c:if>
-    <c:if test="${param.success == 'cancelled'}">
-        <div class="mb-6 px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md">
-            <p class="font-medium text-sm">Booking cancelled.</p>
-        </div>
-    </c:if>
-    <c:if test="${param.error == 'alreadybooked'}">
-        <div class="mb-6 px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md">
-            <p class="font-medium text-sm">You have already booked this class.</p>
-        </div>
-    </c:if>
-    <c:if test="${param.error == 'cancel_failed'}">
-        <div class="mb-6 px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md">
-            <p class="font-medium text-sm">Failed to cancel booking.</p>
-        </div>
-    </c:if>
+    <!-- Flash messages are handled by the global toast system in footer.jsp -->
+
 
     <!-- Welcome Header -->
     <div class="mb-10">
         <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
             Welcome back, ${loggedUser.fullName}!
         </h1>
-        <p class="text-zinc-400 text-sm md:text-base">Ready for your next workout? Browse and manage your classes below.</p>
+        <p class="text-zinc-400 text-sm md:text-base mb-6">Ready for your next workout? Browse and manage your classes below.</p>
+        
+        <!-- Quick Links -->
+        <div class="flex flex-wrap gap-4">
+            <a href="${pageContext.request.contextPath}/member/trainers" class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-medium rounded-xl border border-zinc-700 transition-colors flex items-center gap-2">
+                <span class="text-emerald-400">💪</span> Book a Personal Trainer
+            </a>
+            <a href="${pageContext.request.contextPath}/member/plans" class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-medium rounded-xl border border-zinc-700 transition-colors flex items-center gap-2">
+                <span class="text-amber-400">⭐</span> Upgrade Plan
+            </a>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -205,6 +196,49 @@
                         <c:otherwise>
                             <div class="p-6 text-center text-sm text-zinc-600">
                                 You haven't booked any classes.
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </section>
+
+            <!-- Trainer Sessions List -->
+            <section class="mt-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold tracking-tight text-white flex items-center gap-2">
+                        <svg class="text-emerald-500 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        Trainer Sessions
+                    </h3>
+                </div>
+                <div class="bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden backdrop-blur-sm">
+                    <c:choose>
+                        <c:when test="${not empty trainerBookings}">
+                            <div class="divide-y divide-zinc-800/50 max-h-96 overflow-y-auto custom-scrollbar">
+                                <c:forEach items="${trainerBookings}" var="tb">
+                                    <div class="p-4 hover:bg-zinc-800/30 transition-colors flex flex-col gap-1">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h5 class="text-sm font-semibold text-emerald-400">Trainer: ${tb.trainerName}</h5>
+                                                <span class="text-xs text-zinc-400">${tb.date} at ${tb.time}</span>
+                                            </div>
+                                            <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${tb.status == 'scheduled' ? 'bg-amber-500/10 text-amber-500' : 'bg-zinc-800 text-zinc-500'}">
+                                                ${tb.status}
+                                            </span>
+                                        </div>
+                                        <c:if test="${tb.status == 'scheduled'}">
+                                            <div class="mt-1 flex justify-end">
+                                                <a href="${pageContext.request.contextPath}/member/book-trainer?action=cancel&bookingId=${tb.bookingId}"
+                                                   class="text-[10px] uppercase tracking-wider font-semibold text-zinc-400 hover:text-red-400 transition-colors px-2 py-1 rounded bg-zinc-800/50 hover:bg-red-500/10 border border-transparent hover:border-red-500/20"
+                                                   onclick="return confirm('Cancel this trainer session?');">Cancel Session</a>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="p-6 text-center text-sm text-zinc-600">
+                                No upcoming trainer sessions.
                             </div>
                         </c:otherwise>
                     </c:choose>

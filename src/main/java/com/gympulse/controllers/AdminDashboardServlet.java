@@ -46,6 +46,7 @@ public class AdminDashboardServlet extends HttpServlet {
         request.setAttribute("totalClasses", totalClasses);
         request.setAttribute("totalBookings", totalBookings);
         request.setAttribute("totalPlans", totalPlans);
+        request.setAttribute("totalRevenue", membershipService.getTotalRevenue());
         request.setAttribute("loggedUser", loggedUser);
 
         request.getRequestDispatcher("/WEB-INF/pages/admin/dashboard.jsp").forward(request, response);

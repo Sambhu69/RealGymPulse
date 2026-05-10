@@ -32,8 +32,10 @@
     boolean isAdminMembers = uri.endsWith("admin/members");
     boolean isAdminClasses = uri.endsWith("admin/classes");
     boolean isAdminPlans = uri.endsWith("admin/plans");
+    boolean isAdminTrainers = uri.endsWith("admin/trainers");
     boolean isMemberDashboard = uri.endsWith("member/dashboard");
     boolean isMemberProfile = uri.endsWith("member/profile");
+    boolean isTrainerDashboard = uri.endsWith("trainer/dashboard");
 %>
 
 <div class="w-full flex justify-center py-6 fixed top-0 z-50 pointer-events-none">
@@ -86,6 +88,13 @@
                            Plans
                         </a>
                     </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/admin/trainers" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isAdminTrainers ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Trainers
+                        </a>
+                    </li>
                 </c:when>
                 <c:when test="${sessionScope.loggedUser.role == 'member'}">
                     <li>
@@ -100,6 +109,15 @@
                            class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
                            <%= isMemberProfile ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
                            Profile
+                        </a>
+                    </li>
+                </c:when>
+                <c:when test="${sessionScope.loggedUser.role == 'trainer'}">
+                    <li>
+                        <a href="${pageContext.request.contextPath}/trainer/dashboard" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isTrainerDashboard ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Dashboard
                         </a>
                     </li>
                 </c:when>

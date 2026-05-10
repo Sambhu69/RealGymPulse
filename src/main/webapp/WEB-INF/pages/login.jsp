@@ -52,19 +52,19 @@
             <c:remove var="successMsg" scope="session" />
         </c:if>
 
-        <form action="${pageContext.request.contextPath}/login" method="POST" class="space-y-5">
+        <form action="${pageContext.request.contextPath}/login" method="POST" class="space-y-5" autocomplete="off">
             <div>
                 <label for="email" class="block text-sm font-medium text-zinc-300 mb-1.5">Email Address</label>
                 <input type="email" id="email" name="email" 
                        class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-zinc-700 focus:border-zinc-700 outline-none transition-all text-white placeholder-zinc-600 shadow-inner" 
-                       placeholder="you@example.com" required>
+                       placeholder="you@example.com" autocomplete="off" required>
             </div>
             
             <div>
                 <label for="password" class="block text-sm font-medium text-zinc-300 mb-1.5">Password</label>
                 <input type="password" id="password" name="password" 
                        class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-zinc-700 focus:border-zinc-700 outline-none transition-all text-white placeholder-zinc-600 shadow-inner" 
-                       placeholder="••••••••" required>
+                       placeholder="••••••••" autocomplete="new-password" required>
             </div>
 
             <button type="submit" class="w-full py-2.5 px-4 bg-white hover:bg-zinc-200 text-black font-semibold rounded-lg shadow-md transition-colors duration-200 mt-2">
@@ -79,6 +79,17 @@
     </div>
 </main>
 
+    <script>
+        // Force clear inputs on page load to prevent browser caching/autocomplete
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const email = document.getElementById('email');
+                const password = document.getElementById('password');
+                if (email) email.value = '';
+                if (password) password.value = '';
+            }, 10);
+        });
+    </script>
 <%@ include file="footer.jsp" %>
 </body>
 </html>

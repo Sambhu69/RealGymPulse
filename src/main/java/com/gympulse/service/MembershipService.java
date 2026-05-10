@@ -148,6 +148,16 @@ public class MembershipService {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
+    public double getTotalRevenue() {
+        String sql = "SELECT SUM(amount) as total FROM payments";
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+            if (rs.next()) return rs.getDouble("total");
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0.0;
+    }
+
     private MembershipPlanModel mapResultSetToPlan(ResultSet rs) throws SQLException {
         MembershipPlanModel p = new MembershipPlanModel();
         p.setPlanId(rs.getInt("plan_id"));

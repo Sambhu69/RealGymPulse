@@ -56,14 +56,14 @@ public class UserService {
     /**
      * Registers a new user with encrypted password.
      */
-    public boolean registerUser(UserModel user) {
+    public int registerUser(UserModel user) {
         if (isEmailExists(user.getUserEmail()) || isPhoneExists(user.getPhone())) {
-            return false;
+            return -1;
         }
 
         String sql = "INSERT INTO users (full_name, email, phone, password, role, status) VALUES (?, ?, ?, ?, ?, 'active')";
         try (Connection conn = DBConfig.getConnection();
-             PreparedStatement pst = conn.prepareStatement(sql)) {
+             PreparedStatement pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             pst.setString(1, user.getFullName());
             pst.setString(2, user.getUserEmail());
@@ -71,10 +71,22 @@ public class UserService {
             pst.setString(4, EncryptionUtil.encrypt(user.getUserPassword()));
             pst.setString(5, user.getRole());
             
-            return pst.executeUpdate() > 0;
+            int affectedRows = pst.executeUpdate();
+            if (affectedRows == 0) {
+                return -1;
+            }
+
+            try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+                else {
+                    return -1;
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
 

@@ -77,6 +77,8 @@ public class LoginServlet extends HttpServlet {
             throws IOException {
         if ("admin".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+        } else if ("trainer".equalsIgnoreCase(user.getRole())) {
+            response.sendRedirect(request.getContextPath() + "/trainer/dashboard");
         } else {
             response.sendRedirect(request.getContextPath() + "/member/dashboard");
         }

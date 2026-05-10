@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import com.gympulse.service.MembershipService;
 import java.io.IOException;
 
 /**
@@ -30,6 +31,14 @@ public class BookClassServlet extends HttpServlet {
         UserModel loggedUser = (UserModel) session.getAttribute("loggedUser");
         int classId = Integer.parseInt(request.getParameter("classId"));
 
+        MembershipService memService = new MembershipService();
+        com.gympulse.model.MembershipModel activeMem = memService.getActiveMembership(loggedUser.getUserId());
+        
+        if (activeMem == null || (activeMem.getPlanId() != 2 && activeMem.getPlanId() != 3)) {
+            response.sendRedirect(request.getContextPath() + "/member/dashboard?error=membership_required");
+            return;
+        }
+
         if (classService.bookClass(loggedUser.getUserId(), classId)) {
             response.sendRedirect(request.getContextPath() + "/member/dashboard?success=booked");
         } else {
@@ -43,13 +52,19 @@ public class BookClassServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("cancel".equals(action)) {
-            int bookingId = Integer.parseInt(request.getParameter("bookingId"));
-            int classId = Integer.parseInt(request.getParameter("classId"));
+            HttpSession session = request.getSession(false);
+            UserModel loggedUser = (UserModel) session.getAttribute("loggedUser");
+            try {
+                int bookingId = Integer.parseInt(request.getParameter("bookingId"));
+                int classId = Integer.parseInt(request.getParameter("classId"));
 
-            if (classService.cancelBooking(bookingId, classId)) {
-                response.sendRedirect(request.getContextPath() + "/member/dashboard?success=cancelled");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/member/dashboard?error=cancel_failed");
+                if (classService.cancelBooking(bookingId, classId, loggedUser.getUserId())) {
+                    response.sendRedirect(request.getContextPath() + "/member/dashboard?success=cancelled");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/member/dashboard?error=cancel_failed");
+                }
+            } catch (NumberFormatException e) {
+                response.sendRedirect(request.getContextPath() + "/member/dashboard?error=invalid_input");
             }
         } else {
             response.sendRedirect(request.getContextPath() + "/member/dashboard");

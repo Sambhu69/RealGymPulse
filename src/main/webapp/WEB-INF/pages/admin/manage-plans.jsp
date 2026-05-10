@@ -25,13 +25,7 @@
         </button>
     </div>
 
-    <!-- Flash Messages -->
-    <div class="space-y-3 mb-8">
-        <c:if test="${param.success == 'added'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Plan added successfully!</div></c:if>
-        <c:if test="${param.success == 'updated'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Plan updated successfully!</div></c:if>
-        <c:if test="${param.success == 'deleted'}"><div class="px-4 py-3 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl backdrop-blur-md text-sm">Plan deactivated successfully!</div></c:if>
-        <c:if test="${param.error == 'invalid_data'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">Invalid data. Check all fields.</div></c:if>
-    </div>
+    <!-- Flash messages are handled by the global toast system in footer.jsp -->
 
     <!-- Add Plan Form (collapsible) -->
     <div id="addPlanForm" class="hidden mb-10 overflow-hidden">

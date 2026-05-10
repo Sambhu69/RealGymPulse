@@ -19,16 +19,8 @@
         <p class="text-zinc-400 text-sm">Manage your account details and security preferences.</p>
     </div>
 
-    <!-- Flash Messages -->
-    <div class="space-y-3 mb-8 w-full">
-        <c:if test="${param.success == 'profile_updated'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Profile updated successfully!</div></c:if>
-        <c:if test="${param.success == 'password_changed'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Password changed successfully!</div></c:if>
-        <c:if test="${param.error == 'invalid_name'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">Invalid name. Use letters only.</div></c:if>
-        <c:if test="${param.error == 'invalid_phone'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">Phone must be exactly 10 digits.</div></c:if>
-        <c:if test="${param.error == 'wrong_password'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">Current password is incorrect.</div></c:if>
-        <c:if test="${param.error == 'weak_password'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">New password too weak. Min 8 chars, 1 upper, 1 number, 1 special char.</div></c:if>
-        <c:if test="${param.error == 'passwords_mismatch'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">New passwords do not match.</div></c:if>
-    </div>
+    <!-- Flash messages are handled by the global toast system in footer.jsp -->
+
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
 
@@ -122,7 +114,7 @@
         </div>
 
     </div>
-</div>
+</main>
 
 <%@ include file="../footer.jsp" %>
 

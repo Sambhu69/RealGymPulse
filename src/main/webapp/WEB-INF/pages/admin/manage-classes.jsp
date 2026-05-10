@@ -25,14 +25,7 @@
         </button>
     </div>
 
-    <!-- Flash Messages -->
-    <div class="space-y-3 mb-8">
-        <c:if test="${param.success == 'added'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Class added successfully!</div></c:if>
-        <c:if test="${param.success == 'updated'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Class updated successfully!</div></c:if>
-        <c:if test="${param.success == 'deleted'}"><div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl backdrop-blur-md text-sm">Class deleted successfully!</div></c:if>
-        <c:if test="${param.error == 'invalid_data'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">Invalid data. Please check all fields.</div></c:if>
-        <c:if test="${param.error == 'add_failed'}"><div class="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl backdrop-blur-md text-sm">Failed to add class.</div></c:if>
-    </div>
+    <!-- Flash messages are handled by the global toast system in footer.jsp -->
 
     <!-- Add New Class Form (collapsible) -->
     <div id="addClassForm" class="hidden mb-10 overflow-hidden">

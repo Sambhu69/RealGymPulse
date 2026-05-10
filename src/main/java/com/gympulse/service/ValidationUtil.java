@@ -20,19 +20,16 @@ public class ValidationUtil {
         return Pattern.matches(EMAIL_REGEX, email);
     }
 
-    /**
-     * Checks if phone number is exactly 10 digits.
-     */
     public static boolean isValidPhone(String phone) {
-        return phone != null && phone.matches("\\d{10}");
+        return phone != null && phone.replaceAll("[^0-9]", "").length() >= 10;
     }
 
     /**
-     * Validates password: min 8 chars, 1 uppercase, 1 number, 1 special char.
+     * Validates password: min 6 chars.
      */
     public static boolean isValidPassword(String password) {
         if (password == null) return false;
-        return Pattern.matches(PASSWORD_REGEX, password);
+        return password.length() >= 6;
     }
 
     /**

@@ -56,11 +56,11 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
         if (!ValidationUtil.isValidPhone(phone)) {
-            forwardWithError(request, response, "Phone must be exactly 10 digits.");
+            forwardWithError(request, response, "Phone must have at least 10 digits.");
             return;
         }
         if (!ValidationUtil.isValidPassword(userPassword)) {
-            forwardWithError(request, response, "Password must be min 8 chars with 1 uppercase, 1 number, and 1 special char.");
+            forwardWithError(request, response, "Password must be at least 6 characters.");
             return;
         }
         if (!userPassword.equals(confirmPassword)) {
@@ -77,7 +77,7 @@ public class RegisterServlet extends HttpServlet {
         user.setRole("member");
         user.setStatus("active");
 
-        if (userService.registerUser(user)) {
+        if (userService.registerUser(user) != -1) {
             request.getSession().setAttribute("successMsg", "Registration successful! Please login.");
             response.sendRedirect(request.getContextPath() + "/login");
         } else {
