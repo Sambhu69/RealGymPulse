@@ -40,6 +40,14 @@ public class BookTrainerServlet extends HttpServlet {
             } catch (NumberFormatException e) {
                 response.sendRedirect(request.getContextPath() + "/member/dashboard?error=invalid_input");
             }
+        } else if ("cancelAll".equals(action)) {
+            HttpSession session = request.getSession(false);
+            UserModel loggedUser = (UserModel) session.getAttribute("loggedUser");
+            if (trainerService.cancelAllTrainerBookings(loggedUser.getUserId())) {
+                response.sendRedirect(request.getContextPath() + "/member/dashboard?success=cancelled");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/member/dashboard?error=cancel_failed");
+            }
         } else {
             response.sendRedirect(request.getContextPath() + "/member/dashboard");
         }

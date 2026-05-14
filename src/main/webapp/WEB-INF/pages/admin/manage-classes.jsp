@@ -112,7 +112,7 @@
                             </td>
                             <td class="px-6 py-4 text-right space-x-2 border-b border-zinc-800/50 group-last:border-0">
                                 <button onclick="toggleEditForm('edit-${cls.classId}')" class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-lg bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors border border-zinc-700">Edit</button>
-                                <a href="${pageContext.request.contextPath}/admin/classes?action=delete&classId=${cls.classId}" class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors border border-red-500/20" onclick="return confirm('Delete this class?');">Delete</a>
+                                <a href="${pageContext.request.contextPath}/admin/classes?action=delete&classId=${cls.classId}" class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors border border-red-500/20" onclick="gpConfirm(event, 'Are you sure you want to delete this class?', 'Delete Class');">Delete</a>
                             </td>
                         </tr>
                         

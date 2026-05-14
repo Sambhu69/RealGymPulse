@@ -97,7 +97,7 @@
                             </td>
                             <td class="px-6 py-4 text-right space-x-2 border-b border-zinc-800/50 group-last:border-0">
                                 <button onclick="toggleEditForm('edit-${plan.planId}')" class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-lg bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors border border-zinc-700">Edit</button>
-                                <form action="${pageContext.request.contextPath}/admin/plans" method="POST" class="inline-block" onsubmit="return confirm('Deactivate this plan?');">
+                                <form action="${pageContext.request.contextPath}/admin/plans" method="POST" class="inline-block" onsubmit="gpConfirm(event, 'Are you sure you want to deactivate this plan?', 'Deactivate Plan');">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="planId" value="${plan.planId}">
                                     <button type="submit" class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-lg bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-colors border border-amber-500/20">Deactivate</button>

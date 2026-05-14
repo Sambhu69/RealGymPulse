@@ -36,6 +36,7 @@
     boolean isMemberDashboard = uri.endsWith("member/dashboard");
     boolean isMemberProfile = uri.endsWith("member/profile");
     boolean isTrainerDashboard = uri.endsWith("trainer/dashboard");
+    boolean isNotices = uri.endsWith("notices");
 %>
 
 <div class="w-full flex justify-center py-6 fixed top-0 z-50 pointer-events-none">
@@ -95,6 +96,13 @@
                            Trainers
                         </a>
                     </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/notices" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isNotices ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Notices
+                        </a>
+                    </li>
                 </c:when>
                 <c:when test="${sessionScope.loggedUser.role == 'member'}">
                     <li>
@@ -111,6 +119,13 @@
                            Profile
                         </a>
                     </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/notices" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isNotices ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Notices
+                        </a>
+                    </li>
                 </c:when>
                 <c:when test="${sessionScope.loggedUser.role == 'trainer'}">
                     <li>
@@ -118,6 +133,30 @@
                            class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
                            <%= isTrainerDashboard ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/notices" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isNotices ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Notices
+                        </a>
+                    </li>
+                </c:when>
+                <c:when test="${sessionScope.loggedUser.role == 'instructor'}">
+                    <% boolean isInstructorDashboard = uri.endsWith("instructor/dashboard"); %>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/instructor/dashboard" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isInstructorDashboard ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/notices" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isNotices ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Notices
                         </a>
                     </li>
                 </c:when>
@@ -136,6 +175,28 @@
             <div class="h-6 w-[1px] bg-white/10 mx-1"></div>
             
             <li class="flex items-center gap-2 pl-2 pr-1">
+                <!-- Notification Bell -->
+                <div class="relative" id="gp-notif-wrapper">
+                    <button onclick="toggleNotifPanel()" class="relative p-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200" title="Notifications">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        <span id="gp-notif-dot" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full hidden"></span>
+                    </button>
+                    
+                    <!-- Notification Dropdown -->
+                    <div id="gp-notif-panel" class="hidden absolute right-0 top-full mt-2 w-80 bg-zinc-900/95 backdrop-blur-xl border border-zinc-800 rounded-2xl shadow-2xl shadow-black/50 z-[60] overflow-hidden">
+                        <div class="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+                            <span class="text-xs font-bold text-zinc-300 uppercase tracking-widest">Recent Notices</span>
+                            <div class="flex items-center gap-3">
+                                <button onclick="clearNotices()" class="text-[10px] font-semibold text-zinc-500 hover:text-zinc-300 uppercase tracking-wider transition-colors">Clear All</button>
+                                <a href="${pageContext.request.contextPath}/notices" class="text-[10px] font-semibold text-blue-400 hover:text-blue-300 uppercase tracking-wider transition-colors">View All</a>
+                            </div>
+                        </div>
+                        <div id="gp-notif-list" class="max-h-72 overflow-y-auto custom-scrollbar">
+                            <div class="px-4 py-6 text-center text-xs text-zinc-500">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+
                 <a href="${pageContext.request.contextPath}/logout" class="block px-3 py-2 text-[10px] md:text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded-full transition-all duration-200">
                     Logout
                 </a>
@@ -156,4 +217,172 @@
 </div>
 
 <div class="pt-28"></div>
+
+<!-- Notification Bell Script -->
+<script>
+(function() {
+    var panelOpen = false;
+    var contextPath = '${pageContext.request.contextPath}';
+    var currentUserId = '${sessionScope.loggedUser.userId}';
+    var storageKey = 'gp_last_seen_notice_id_' + currentUserId;
+    var clearKey = 'gp_cleared_notice_id_' + currentUserId;
+
+    window.clearNotices = function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', contextPath + '/api/notices', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    if (data && data.length > 0) {
+                        localStorage.setItem(clearKey, data[0].noticeId);
+                        localStorage.setItem(storageKey, data[0].noticeId);
+                    }
+                    document.getElementById('gp-notif-list').innerHTML = '<div class="px-4 py-6 text-center text-xs text-zinc-500">No new notices.</div>';
+                    document.getElementById('gp-notif-dot').classList.add('hidden');
+                } catch(e) {}
+            }
+        };
+        xhr.send();
+    };
+
+    window.toggleNotifPanel = function() {
+        var panel = document.getElementById('gp-notif-panel');
+        panelOpen = !panelOpen;
+        if (panelOpen) {
+            panel.classList.remove('hidden');
+            loadNotifications(true); // pass true to indicate it was opened by user
+        } else {
+            panel.classList.add('hidden');
+        }
+    };
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        var wrapper = document.getElementById('gp-notif-wrapper');
+        if (wrapper && !wrapper.contains(e.target) && panelOpen) {
+            document.getElementById('gp-notif-panel').classList.add('hidden');
+            panelOpen = false;
+        }
+    });
+
+    var categoryColors = {
+        'class_cancellation': 'bg-red-500/10 text-red-400',
+        'holiday': 'bg-amber-500/10 text-amber-400',
+        'maintenance': 'bg-orange-500/10 text-orange-400',
+        'event': 'bg-purple-500/10 text-purple-400',
+        'general': 'bg-blue-500/10 text-blue-400'
+    };
+    var categoryLabels = {
+        'class_cancellation': 'Cancellation',
+        'holiday': 'Holiday',
+        'maintenance': 'Maintenance',
+        'event': 'Event',
+        'general': 'General'
+    };
+
+    function loadNotifications(markAsSeen) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', contextPath + '/api/notices', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    if (markAsSeen && data && data.length > 0) {
+                        localStorage.setItem(storageKey, data[0].noticeId);
+                        document.getElementById('gp-notif-dot').classList.add('hidden');
+                    }
+                    renderNotifications(data);
+                } catch(e) {
+                    document.getElementById('gp-notif-list').innerHTML = '<div class="px-4 py-6 text-center text-xs text-zinc-500">Failed to load.</div>';
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function renderNotifications(items) {
+        var list = document.getElementById('gp-notif-list');
+        var dot = document.getElementById('gp-notif-dot');
+
+        var clearedId = parseInt(localStorage.getItem(clearKey) || '0');
+        var filteredItems = [];
+        for (var j = 0; j < items.length; j++) {
+            if (items[j].noticeId > clearedId) {
+                filteredItems.push(items[j]);
+            }
+        }
+
+        if (filteredItems.length === 0) {
+            list.innerHTML = '<div class="px-4 py-6 text-center text-xs text-zinc-500">No new notices.</div>';
+            dot.classList.add('hidden');
+            return;
+        }
+
+        items = filteredItems;
+
+        var latestNoticeId = items[0].noticeId;
+        var lastSeenId = localStorage.getItem(storageKey);
+        
+        if (!lastSeenId || parseInt(lastSeenId) < latestNoticeId) {
+            dot.classList.remove('hidden');
+        } else {
+            dot.classList.add('hidden');
+        }
+
+        var html = '';
+        for (var i = 0; i < items.length; i++) {
+            var n = items[i];
+            var catClass = categoryColors[n.category] || categoryColors['general'];
+            var catLabel = categoryLabels[n.category] || 'General';
+            html += '<a href="' + contextPath + '/notices" class="block px-4 py-3 hover:bg-zinc-800/50 transition-colors border-b border-zinc-800/50 last:border-0">';
+            html += '<div class="flex items-center gap-2 mb-1">';
+            html += '<span class="text-[9px] uppercase font-bold px-1.5 py-px rounded ' + catClass + '">' + catLabel + '</span>';
+            html += '<span class="text-[10px] text-zinc-600">' + n.authorName + '</span>';
+            html += '</div>';
+            html += '<p class="text-xs font-medium text-zinc-200 truncate">' + n.title + '</p>';
+            html += '<p class="text-[10px] text-zinc-500 mt-0.5">' + formatTime(n.createdAt) + '</p>';
+            html += '</a>';
+        }
+        list.innerHTML = html;
+    }
+
+    function formatTime(ts) {
+        if (!ts) return '';
+        try {
+            var d = new Date(ts.replace(' ', 'T'));
+            var now = new Date();
+            var diff = Math.floor((now - d) / 60000);
+            if (diff < 1) return 'Just now';
+            if (diff < 60) return diff + 'm ago';
+            if (diff < 1440) return Math.floor(diff/60) + 'h ago';
+            return Math.floor(diff/1440) + 'd ago';
+        } catch(e) { return ts; }
+    }
+
+    // Pre-load on page ready to set dot indicator
+    document.addEventListener('DOMContentLoaded', function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', contextPath + '/api/notices', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    if (data && data.length > 0) {
+                        var clearedId = parseInt(localStorage.getItem(clearKey) || '0');
+                        var latestNoticeId = data[0].noticeId;
+                        if (latestNoticeId > clearedId) {
+                            var lastSeenId = localStorage.getItem(storageKey);
+                            if (!lastSeenId || parseInt(lastSeenId) < latestNoticeId) {
+                                document.getElementById('gp-notif-dot').classList.remove('hidden');
+                            }
+                        }
+                    }
+                } catch(e) {}
+            }
+        };
+        xhr.send();
+    });
+})();
+</script>
 

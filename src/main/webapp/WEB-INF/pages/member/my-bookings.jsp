@@ -53,7 +53,7 @@
                                         <c:if test="${b.status == 'confirmed'}">
                                             <a href="${pageContext.request.contextPath}/member/book?action=cancel&bookingId=${b.bookingId}&classId=${b.classId}"
                                                class="btn btn-small btn-danger"
-                                               onclick="return confirm('Cancel this booking?');">Cancel</a>
+                                               onclick="gpConfirm(event, 'Are you sure you want to cancel this booking?', 'Cancel Booking')">Cancel</a>
                                         </c:if>
                                     </td>
                                 </tr>

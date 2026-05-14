@@ -22,6 +22,15 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         userService = new UserService();
+        // Run DB schema updates for new instructor features
+        try (java.sql.Connection conn = com.gympulse.config.DBConfig.getConnection();
+             java.sql.Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'member', 'trainer', 'instructor') DEFAULT 'member'");
+        } catch (Exception e) {}
+        try (java.sql.Connection conn = com.gympulse.config.DBConfig.getConnection();
+             java.sql.Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("ALTER TABLE fitness_classes MODIFY COLUMN status ENUM('available', 'full', 'cancelled', 'in_progress', 'completed') DEFAULT 'available'");
+        } catch (Exception e) {}
     }
 
     @Override
@@ -79,6 +88,8 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/admin/dashboard");
         } else if ("trainer".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/trainer/dashboard");
+        } else if ("instructor".equalsIgnoreCase(user.getRole())) {
+            response.sendRedirect(request.getContextPath() + "/instructor/dashboard");
         } else {
             response.sendRedirect(request.getContextPath() + "/member/dashboard");
         }

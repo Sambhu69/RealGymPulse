@@ -183,10 +183,22 @@ public class ClassService {
         }
     }
 
+    public boolean cancelAllBookings(int userId) {
+        List<BookingModel> activeBookings = getBookingsByUser(userId);
+        boolean allCancelled = true;
+        for (BookingModel b : activeBookings) {
+            if (!"cancelled".equals(b.getStatus())) {
+                boolean success = cancelBooking(b.getBookingId(), b.getClassId(), userId);
+                if (!success) allCancelled = false;
+            }
+        }
+        return allCancelled;
+    }
+
     public List<BookingModel> getBookingsByUser(int userId) {
         List<BookingModel> bookings = new ArrayList<>();
         String sql = "SELECT b.*, f.class_name, f.schedule_date, f.schedule_time FROM class_bookings b " +
-                     "JOIN fitness_classes f ON b.class_id = f.class_id WHERE b.user_id = ?";
+                     "JOIN fitness_classes f ON b.class_id = f.class_id WHERE b.user_id = ? AND b.status != 'cancelled'";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql)) {
             pst.setInt(1, userId);
@@ -200,8 +212,6 @@ public class ClassService {
 
     public List<BookingModel> getAllBookings() {
         List<BookingModel> bookings = new ArrayList<>();
-        // Note: Joining with users to get member name if needed, but BookingModel only has specific fields.
-        // We assume className is the identifier for the joined field.
         String sql = "SELECT b.*, f.class_name, f.schedule_date, f.schedule_time FROM class_bookings b " +
                      "JOIN fitness_classes f ON b.class_id = f.class_id";
         try (Connection conn = DBConfig.getConnection();
@@ -212,6 +222,33 @@ public class ClassService {
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return bookings;
+    }
+
+    public List<FitnessClassModel> getClassesByInstructor(String instructorName) {
+        List<FitnessClassModel> classes = new ArrayList<>();
+        String sql = "SELECT * FROM fitness_classes WHERE instructor = ? ORDER BY schedule_date, schedule_time";
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, instructorName);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                classes.add(mapResultSetToClass(rs));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return classes;
+    }
+
+    public boolean updateClassStatus(int classId, String status) {
+        String sql = "UPDATE fitness_classes SET status = ? WHERE class_id = ?";
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, status);
+            pst.setInt(2, classId);
+            return pst.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     // Helper Methods

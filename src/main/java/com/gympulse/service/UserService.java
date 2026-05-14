@@ -217,7 +217,7 @@ public class UserService {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    private void unlockUser(int userId) {
+    public void unlockUser(int userId) {
         resetFailedAttempts(userId);
     }
 

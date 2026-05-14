@@ -6,6 +6,8 @@ import com.gympulse.model.FitnessClassModel;
 import com.gympulse.model.BookingModel;
 import com.gympulse.service.ClassService;
 import com.gympulse.service.MembershipService;
+import com.gympulse.service.NoticeService;
+import com.gympulse.model.NoticeModel;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,11 +26,13 @@ public class MemberDashboardServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ClassService classService;
     private MembershipService membershipService;
+    private NoticeService noticeService;
 
     @Override
     public void init() throws ServletException {
         classService = new ClassService();
         membershipService = new MembershipService();
+        noticeService = new NoticeService();
     }
 
     @Override
@@ -41,9 +45,9 @@ public class MemberDashboardServlet extends HttpServlet {
         MembershipModel activeMembership = membershipService.getActiveMembership(loggedUser.getUserId());
         request.setAttribute("activeMembership", activeMembership);
 
-        // Available classes
-        List<FitnessClassModel> availableClasses = classService.getAvailableClasses();
-        request.setAttribute("availableClasses", availableClasses);
+        // Notices for the Notice Board
+        List<NoticeModel> notices = noticeService.getAllNotices();
+        request.setAttribute("notices", notices);
 
         // User's bookings
         List<BookingModel> myBookings = classService.getBookingsByUser(loggedUser.getUserId());

@@ -10,8 +10,11 @@ public class TrainerProfileModel {
     // Join fields
     private String fullName;
     private String profileImage;
+    private String status;
 
     // Getters and Setters
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
     public int getProfileId() { return profileId; }
     public void setProfileId(int profileId) { this.profileId = profileId; }
     public int getUserId() { return userId; }

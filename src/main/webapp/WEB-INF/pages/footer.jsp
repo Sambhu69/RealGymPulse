@@ -180,7 +180,12 @@
       // Trainer — Dashboard
       'slot_added'           : 'Availability slot added successfully!',
       // Contact
-      'message_sent'         : 'Your message was sent. We\'ll be in touch!'
+      'message_sent'         : 'Your message was sent. We\'ll be in touch!',
+      // Notices
+      'notice_posted'        : 'Notice published successfully!',
+      'notice_deleted'       : 'Notice deleted.',
+      // Admin — Trainers (unlock)
+      'trainer_unlocked'     : 'Trainer account unlocked successfully!'
     },
     error: {
       // Admin — Members
@@ -200,7 +205,9 @@
       'invalid_name'         : 'Invalid name. Use letters only.',
       'invalid_phone'        : 'Phone must be at least 10 digits.',
       'wrong_password'       : 'Current password is incorrect.',
-      'passwords_mismatch'   : 'New passwords do not match.'
+      'passwords_mismatch'   : 'New passwords do not match.',
+      'not_authorized'       : 'You are not authorized to perform this action.',
+      'post_failed'          : 'Failed to post notice. Please try again.'
     },
     warning: {
       'plan_deactivated'     : 'Plan deactivated successfully.'
@@ -294,4 +301,75 @@
   /* Expose globally so any page JS can call window.gpToast() */
   window.gpToast = showToast;
 })();
+</script>
+
+<!-- GLOBAL CONFIRM MODAL -->
+<div id="gp-confirm-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" style="display: none;">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl w-full max-w-sm p-6 transform scale-95 transition-transform duration-300">
+        <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center">
+                <svg class="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-1" id="gp-confirm-title">Confirm Action</h3>
+                <p class="text-sm text-zinc-400" id="gp-confirm-message">Are you sure you want to proceed?</p>
+            </div>
+        </div>
+        <div class="mt-6 flex justify-end gap-3">
+            <button id="gp-confirm-cancel" class="px-4 py-2 rounded-xl text-sm font-medium text-zinc-300 hover:bg-zinc-800 transition-colors">Cancel</button>
+            <button id="gp-confirm-proceed" class="px-4 py-2 rounded-xl text-sm font-medium bg-red-500 hover:bg-red-600 text-white transition-colors shadow-lg shadow-red-500/20">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+window.gpConfirm = function(event, message, title) {
+    event.preventDefault();
+    var target = event.currentTarget; // The form or anchor
+    var isForm = target.tagName.toLowerCase() === 'form';
+    
+    var modal = document.getElementById('gp-confirm-modal');
+    var msgEl = document.getElementById('gp-confirm-message');
+    var titleEl = document.getElementById('gp-confirm-title');
+    var proceedBtn = document.getElementById('gp-confirm-proceed');
+    
+    if (message) msgEl.innerText = message;
+    if (title) titleEl.innerText = title;
+    else titleEl.innerText = 'Confirm Action';
+    
+    // Clear previous event listeners on proceed btn by cloning it
+    var newProceedBtn = proceedBtn.cloneNode(true);
+    proceedBtn.parentNode.replaceChild(newProceedBtn, proceedBtn);
+    
+    newProceedBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (isForm) {
+            target.submit();
+        } else {
+            window.location.href = target.href;
+        }
+    });
+    
+    modal.style.display = 'flex';
+    modal.classList.remove('hidden');
+    // slight delay for transition
+    requestAnimationFrame(function() {
+        modal.classList.remove('opacity-0');
+        modal.children[0].classList.remove('scale-95');
+        modal.children[0].classList.add('scale-100');
+    });
+};
+
+document.getElementById('gp-confirm-cancel').addEventListener('click', function() {
+    var modal = document.getElementById('gp-confirm-modal');
+    modal.classList.add('opacity-0');
+    modal.children[0].classList.remove('scale-100');
+    modal.children[0].classList.add('scale-95');
+    setTimeout(function() {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }, 300);
+});
 </script>

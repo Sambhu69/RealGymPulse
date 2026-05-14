@@ -15,7 +15,7 @@ public class TrainerService {
 
     public List<TrainerProfileModel> getAllTrainers() {
         List<TrainerProfileModel> trainers = new ArrayList<>();
-        String sql = "SELECT p.*, u.full_name, u.profile_image FROM trainer_profiles p " +
+        String sql = "SELECT p.*, u.full_name, u.profile_image, u.status FROM trainer_profiles p " +
                      "JOIN users u ON p.user_id = u.user_id WHERE u.role = 'trainer'";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql);
@@ -29,6 +29,7 @@ public class TrainerService {
                 tp.setRating(rs.getDouble("rating"));
                 tp.setFullName(rs.getString("full_name"));
                 tp.setProfileImage(rs.getString("profile_image"));
+                tp.setStatus(rs.getString("status"));
                 trainers.add(tp);
             }
         } catch (SQLException e) { e.printStackTrace(); }
@@ -134,13 +135,26 @@ public class TrainerService {
         }
     }
 
+    public boolean cancelAllTrainerBookings(int memberId) {
+        List<java.util.Map<String, String>> bookings = getMemberTrainerBookings(memberId);
+        boolean allCancelled = true;
+        for (java.util.Map<String, String> b : bookings) {
+            if (!"cancelled".equals(b.get("status"))) {
+                int bookingId = Integer.parseInt(b.get("bookingId"));
+                boolean success = cancelTrainerBooking(bookingId, memberId);
+                if (!success) allCancelled = false;
+            }
+        }
+        return allCancelled;
+    }
+
     public List<java.util.Map<String, String>> getMemberTrainerBookings(int memberId) {
         List<java.util.Map<String, String>> bookings = new ArrayList<>();
         String sql = "SELECT b.booking_id, b.status, s.slot_date, s.start_time, u.full_name as trainer_name " +
                      "FROM trainer_bookings b " +
                      "JOIN trainer_slots s ON b.slot_id = s.slot_id " +
                      "JOIN users u ON b.trainer_id = u.user_id " +
-                     "WHERE b.member_id = ? ORDER BY s.slot_date, s.start_time";
+                     "WHERE b.member_id = ? AND b.status != 'cancelled' ORDER BY s.slot_date, s.start_time";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql)) {
             pst.setInt(1, memberId);

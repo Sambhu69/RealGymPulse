@@ -67,6 +67,9 @@ public class ManageTrainersServlet extends HttpServlet {
                 case "delete":
                     handleDelete(request, response);
                     break;
+                case "unlock":
+                    handleUnlock(request, response);
+                    break;
                 default:
                     response.sendRedirect(request.getContextPath() + "/admin/trainers");
             }
@@ -131,5 +134,12 @@ public class ManageTrainersServlet extends HttpServlet {
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/trainers?error=delete_failed");
         }
+    }
+
+    private void handleUnlock(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        com.gympulse.service.UserService userService = new com.gympulse.service.UserService();
+        userService.unlockUser(userId);
+        response.sendRedirect(request.getContextPath() + "/admin/trainers?success=trainer_unlocked");
     }
 }

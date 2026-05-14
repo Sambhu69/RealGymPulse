@@ -123,6 +123,20 @@
                 <div class="absolute -top-10 -right-10 w-32 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none"></div>
                 <h3 class="text-lg font-bold text-white mb-6">Security & Account</h3>
                 
+                <c:if test="${selectedTrainer.status == 'locked'}">
+                    <div class="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-amber-400 font-semibold text-sm">Account Locked</p>
+                            <p class="text-zinc-400 text-xs mt-1">This trainer's account is currently locked due to too many failed login attempts.</p>
+                        </div>
+                        <form action="${pageContext.request.contextPath}/admin/trainers" method="POST">
+                            <input type="hidden" name="action" value="unlock">
+                            <input type="hidden" name="userId" value="${selectedTrainer.userId}">
+                            <button type="submit" class="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-sm font-medium rounded-lg border border-amber-500/30 transition-colors whitespace-nowrap">Unlock</button>
+                        </form>
+                    </div>
+                </c:if>
+
                 <form action="${pageContext.request.contextPath}/admin/trainers" method="POST" class="space-y-4 mb-8">
                     <input type="hidden" name="action" value="password">
                     <input type="hidden" name="userId" value="${selectedTrainer.userId}">
@@ -139,7 +153,7 @@
                     <div class="text-xs font-semibold text-red-500/80 uppercase tracking-wider">Danger Zone</div>
                     <div class="p-4 bg-red-500/5 border border-red-500/10 rounded-xl">
                         <p class="text-xs text-zinc-400 mb-4 leading-relaxed">Deleting this account is permanent and will remove all trainer stats and profile data.</p>
-                        <form action="${pageContext.request.contextPath}/admin/trainers" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this trainer?');">
+                        <form action="${pageContext.request.contextPath}/admin/trainers" method="POST" onsubmit="gpConfirm(event, 'Are you sure you want to permanently delete this trainer?', 'Delete Trainer');">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="userId" value="${selectedTrainer.userId}">
                             <button type="submit" class="w-full py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold rounded-xl border border-red-500/20 transition-all">Delete Trainer Account</button>
