@@ -37,7 +37,10 @@ public class NoticeServlet extends HttpServlet {
         if (session != null) {
             UserModel user = (UserModel) session.getAttribute("loggedUser");
             if (user != null) {
-                boolean canPost = "admin".equals(user.getRole()) || "trainer".equals(user.getRole());
+                boolean isAdmin = "admin".equalsIgnoreCase(user.getRole());
+                boolean isTrainer = "trainer".equalsIgnoreCase(user.getRole());
+                boolean isInstructor = "instructor".equalsIgnoreCase(user.getRole());
+                boolean canPost = isAdmin || isTrainer || isInstructor;
                 request.setAttribute("canPost", canPost);
             }
         }
@@ -61,8 +64,13 @@ public class NoticeServlet extends HttpServlet {
             return;
         }
 
-        // Only admin and trainer can post
-        if (!"admin".equals(user.getRole()) && !"trainer".equals(user.getRole())) {
+        // Only admin, trainer, and instructor can post
+        String role = user.getRole();
+        boolean authorized = "admin".equalsIgnoreCase(role) || 
+                             "trainer".equalsIgnoreCase(role) || 
+                             "instructor".equalsIgnoreCase(role);
+
+        if (!authorized) {
             response.sendRedirect(request.getContextPath() + "/notices?error=not_authorized");
             return;
         }
@@ -89,11 +97,48 @@ public class NoticeServlet extends HttpServlet {
             }
         } else if ("delete".equals(action)) {
             int noticeId = Integer.parseInt(request.getParameter("noticeId"));
-            // Admin can delete any notice; trainers can only delete their own
+            // Authorization check
+            NoticeModel existing = noticeService.getNoticeById(noticeId);
+            if (existing == null) {
+                response.sendRedirect(request.getContextPath() + "/notices?error=not_found");
+                return;
+            }
+            if (!"admin".equalsIgnoreCase(user.getRole()) && user.getUserId() != existing.getAuthorId()) {
+                response.sendRedirect(request.getContextPath() + "/notices?error=not_authorized");
+                return;
+            }
+
             if (noticeService.deleteNotice(noticeId)) {
                 response.sendRedirect(request.getContextPath() + "/notices?success=notice_deleted");
             } else {
                 response.sendRedirect(request.getContextPath() + "/notices?error=delete_failed");
+            }
+        } else if ("edit".equals(action)) {
+            int noticeId = Integer.parseInt(request.getParameter("noticeId"));
+            String title = request.getParameter("title");
+            String message = request.getParameter("message");
+            String category = request.getParameter("category");
+
+            if (title == null || title.trim().isEmpty() || message == null || message.trim().isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/notices?error=invalid_data");
+                return;
+            }
+
+            // Authorization check
+            NoticeModel existing = noticeService.getNoticeById(noticeId);
+            if (existing == null) {
+                response.sendRedirect(request.getContextPath() + "/notices?error=not_found");
+                return;
+            }
+            if (!"admin".equalsIgnoreCase(user.getRole()) && user.getUserId() != existing.getAuthorId()) {
+                response.sendRedirect(request.getContextPath() + "/notices?error=not_authorized");
+                return;
+            }
+
+            if (noticeService.updateNotice(noticeId, title.trim(), message.trim(), category)) {
+                response.sendRedirect(request.getContextPath() + "/notices?success=notice_updated");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/notices?error=update_failed");
             }
         } else {
             response.sendRedirect(request.getContextPath() + "/notices");

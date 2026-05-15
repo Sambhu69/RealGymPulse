@@ -23,7 +23,7 @@ import java.nio.file.StandardCopyOption;
  * ProfileServlet handles member profile viewing, editing, file upload,
  * and password change. Supports multipart form data for profile image uploads.
  */
-@WebServlet("/member/profile")
+@WebServlet(urlPatterns = {"/member/profile", "/instructor/profile", "/trainer/profile"})
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,        // 1 MB
     maxFileSize       = 5 * 1024 * 1024,    // 5 MB
@@ -43,44 +43,53 @@ public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loggedUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
         UserModel loggedUser = (UserModel) session.getAttribute("loggedUser");
 
         UserModel freshUser = userService.getUserById(loggedUser.getUserId());
         request.setAttribute("userProfile", freshUser);
-        request.getRequestDispatcher("/WEB-INF/pages/member/profile.jsp").forward(request, response);
+        
+        String role = freshUser.getRole().toLowerCase();
+        request.getRequestDispatcher("/WEB-INF/pages/" + role + "/profile.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loggedUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        UserModel loggedUser = (UserModel) session.getAttribute("loggedUser");
+        String role = loggedUser.getRole().toLowerCase();
+        String profilePath = "/" + role + "/profile";
+
         String action = request.getParameter("action");
 
         if ("updateProfile".equals(action)) {
-            handleUpdateProfile(request, response);
+            handleUpdateProfile(request, response, loggedUser, profilePath);
         } else if ("changePassword".equals(action)) {
-            handleChangePassword(request, response);
+            handleChangePassword(request, response, loggedUser, profilePath);
         } else {
-            response.sendRedirect(request.getContextPath() + "/member/profile");
+            response.sendRedirect(request.getContextPath() + profilePath);
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Profile update (supports multipart for image upload)
-    // -------------------------------------------------------------------------
-    private void handleUpdateProfile(HttpServletRequest request, HttpServletResponse response)
+    private void handleUpdateProfile(HttpServletRequest request, HttpServletResponse response, UserModel loggedUser, String profilePath)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        UserModel loggedUser = (UserModel) session.getAttribute("loggedUser");
-
         String fullName = request.getParameter("fullName");
         String phone    = request.getParameter("phone");
 
         if (!ValidationUtil.isNotEmpty(fullName) || !ValidationUtil.isValidName(fullName)) {
-            forwardWithError(request, response, "Invalid name. Only letters and spaces are allowed.");
+            forwardWithError(request, response, "Invalid name. Only letters and spaces are allowed.", loggedUser.getRole().toLowerCase());
             return;
         }
         if (!ValidationUtil.isValidPhone(phone)) {
-            forwardWithError(request, response, "Phone must be exactly 10 digits.");
+            forwardWithError(request, response, "Phone must be exactly 10 digits.", loggedUser.getRole().toLowerCase());
             return;
         }
 
@@ -88,7 +97,6 @@ public class ProfileServlet extends HttpServlet {
         user.setFullName(fullName);
         user.setPhone(phone);
 
-        // Handle profile image upload
         Part filePart = request.getPart("profileImage");
         if (filePart != null && filePart.getSize() > 0) {
             String savedPath = saveProfileImage(request, filePart, loggedUser.getUserId());
@@ -101,16 +109,13 @@ public class ProfileServlet extends HttpServlet {
         if (userService.updateUser(user)) {
             loggedUser.setFullName(fullName);
             loggedUser.setPhone(phone);
-            session.setAttribute("loggedUser", loggedUser);
-            response.sendRedirect(request.getContextPath() + "/member/profile?success=profile_updated");
+            request.getSession().setAttribute("loggedUser", loggedUser);
+            response.sendRedirect(request.getContextPath() + profilePath + "?success=profile_updated");
         } else {
-            forwardWithError(request, response, "Failed to update profile. Please try again.");
+            forwardWithError(request, response, "Failed to update profile. Please try again.", loggedUser.getRole().toLowerCase());
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Save uploaded profile image to webapp/images/profiles/
-    // -------------------------------------------------------------------------
     private String saveProfileImage(HttpServletRequest request, Part filePart, int userId)
             throws IOException {
         String submittedName = filePart.getSubmittedFileName();
@@ -120,10 +125,8 @@ public class ProfileServlet extends HttpServlet {
         int dot = submittedName.lastIndexOf('.');
         if (dot >= 0) extension = submittedName.substring(dot).toLowerCase();
 
-        // Only allow image extensions
         if (!extension.matches("\\.(jpg|jpeg|png|gif|webp)")) return null;
 
-        // Build absolute save path
         String uploadDir = getServletContext().getRealPath("/") + PROFILE_IMG_DIR;
         File uploadFolder = new File(uploadDir);
         if (!uploadFolder.exists()) uploadFolder.mkdirs();
@@ -135,52 +138,42 @@ public class ProfileServlet extends HttpServlet {
             Files.copy(input, Paths.get(absolutePath), StandardCopyOption.REPLACE_EXISTING);
         }
 
-        // Return the relative path to store in DB
         return PROFILE_IMG_DIR + fileName;
     }
 
-    // -------------------------------------------------------------------------
-    // Password change
-    // -------------------------------------------------------------------------
-    private void handleChangePassword(HttpServletRequest request, HttpServletResponse response)
+    private void handleChangePassword(HttpServletRequest request, HttpServletResponse response, UserModel loggedUser, String profilePath)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        UserModel loggedUser = (UserModel) session.getAttribute("loggedUser");
-
         String currentPassword  = request.getParameter("currentPassword");
         String newPassword      = request.getParameter("newPassword");
         String confirmPassword  = request.getParameter("confirmPassword");
 
         UserModel freshUser = userService.getUserById(loggedUser.getUserId());
         if (!EncryptionUtil.verifyPassword(currentPassword, freshUser.getUserPassword())) {
-            forwardWithError(request, response, "Current password is incorrect.");
+            forwardWithError(request, response, "Current password is incorrect.", loggedUser.getRole().toLowerCase());
             return;
         }
         if (!ValidationUtil.isValidPassword(newPassword)) {
-            forwardWithError(request, response, "New password must be min 8 chars with 1 uppercase, 1 number, 1 special char.");
+            forwardWithError(request, response, "New password must be min 8 chars with 1 uppercase, 1 number, 1 special char.", loggedUser.getRole().toLowerCase());
             return;
         }
         if (!newPassword.equals(confirmPassword)) {
-            forwardWithError(request, response, "New passwords do not match.");
+            forwardWithError(request, response, "New passwords do not match.", loggedUser.getRole().toLowerCase());
             return;
         }
 
         if (userService.updatePassword(loggedUser.getUserId(), newPassword)) {
-            response.sendRedirect(request.getContextPath() + "/member/profile?success=password_changed");
+            response.sendRedirect(request.getContextPath() + profilePath + "?success=password_changed");
         } else {
-            forwardWithError(request, response, "Failed to change password. Please try again.");
+            forwardWithError(request, response, "Failed to change password. Please try again.", loggedUser.getRole().toLowerCase());
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Helper: forward back to profile JSP with an error message
-    // -------------------------------------------------------------------------
-    private void forwardWithError(HttpServletRequest request, HttpServletResponse response, String message)
+    private void forwardWithError(HttpServletRequest request, HttpServletResponse response, String message, String role)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         UserModel loggedUser = (UserModel) session.getAttribute("loggedUser");
         request.setAttribute("error", message);
         request.setAttribute("userProfile", userService.getUserById(loggedUser.getUserId()));
-        request.getRequestDispatcher("/WEB-INF/pages/member/profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/pages/" + role + "/profile.jsp").forward(request, response);
     }
 }

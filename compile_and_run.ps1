@@ -25,6 +25,10 @@ $webappsGymPulse = "$tomcatDir\webapps\GymPulse"
 if (Test-Path $webappsGymPulse) {
     Remove-Item -Path $webappsGymPulse -Recurse -Force
 }
+$workDir = "$tomcatDir\work\Catalina\localhost\GymPulse"
+if (Test-Path $workDir) {
+    Remove-Item -Path $workDir -Recurse -Force
+}
 Copy-Item -Path "C:\GymPulse\src\main\webapp" -Destination $webappsGymPulse -Recurse -Force
 
 Write-Host "Starting Tomcat..."

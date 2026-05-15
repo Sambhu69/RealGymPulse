@@ -11,10 +11,16 @@
 <%@ include file="../header.jsp" %>
 
 <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8 flex items-center justify-between">
+    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-3xl font-bold text-white tracking-tight">Trainer Dashboard</h1>
             <p class="text-zinc-400 mt-1">Welcome back, <span class="text-white font-semibold">${sessionScope.loggedUser.fullName}</span></p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="${pageContext.request.contextPath}/notices" class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold rounded-xl text-sm transition-all border border-zinc-700 flex items-center gap-2 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14h5v3"/><path d="M3.3 15a10 10 0 1 0 14.5-10.3"/><path d="m15 14 5 5"/></svg>
+                Manage Notices
+            </a>
         </div>
     </div>
 

@@ -82,6 +82,42 @@ public class NoticeService {
         }
     }
 
+    /**
+     * Gets a single notice by ID.
+     */
+    public NoticeModel getNoticeById(int noticeId) {
+        String sql = "SELECT n.*, u.full_name AS author_name, u.role AS author_role " +
+                     "FROM notices n JOIN users u ON n.author_id = u.user_id " +
+                     "WHERE n.notice_id = ?";
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, noticeId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return mapRow(rs);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return null;
+    }
+
+    /**
+     * Updates an existing notice.
+     */
+    public boolean updateNotice(int noticeId, String title, String message, String category) {
+        String sql = "UPDATE notices SET title = ?, message = ?, category = ? WHERE notice_id = ?";
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, title);
+            pst.setString(2, message);
+            pst.setString(3, category);
+            pst.setInt(4, noticeId);
+            return pst.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private NoticeModel mapRow(ResultSet rs) throws SQLException {
         NoticeModel n = new NoticeModel();
         n.setNoticeId(rs.getInt("notice_id"));

@@ -35,6 +35,8 @@
     boolean isAdminTrainers = uri.endsWith("admin/trainers");
     boolean isMemberDashboard = uri.endsWith("member/dashboard");
     boolean isMemberProfile = uri.endsWith("member/profile");
+    boolean isInstructorProfile = uri.endsWith("instructor/profile");
+    boolean isTrainerProfile = uri.endsWith("trainer/profile");
     boolean isTrainerDashboard = uri.endsWith("trainer/dashboard");
     boolean isNotices = uri.endsWith("notices");
 %>
@@ -136,6 +138,13 @@
                         </a>
                     </li>
                     <li>
+                        <a href="${pageContext.request.contextPath}/trainer/profile" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isTrainerProfile ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Profile
+                        </a>
+                    </li>
+                    <li>
                         <a href="${pageContext.request.contextPath}/notices" 
                            class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
                            <%= isNotices ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
@@ -150,6 +159,13 @@
                            class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
                            <%= isInstructorDashboard ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/instructor/profile" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isInstructorProfile ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Profile
                         </a>
                     </li>
                     <li>
