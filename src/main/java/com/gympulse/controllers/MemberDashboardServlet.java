@@ -45,8 +45,8 @@ public class MemberDashboardServlet extends HttpServlet {
         MembershipModel activeMembership = membershipService.getActiveMembership(loggedUser.getUserId());
         request.setAttribute("activeMembership", activeMembership);
 
-        // Notices for the Notice Board
-        List<NoticeModel> notices = noticeService.getAllNotices();
+        // 4. Fetch notices
+        List<NoticeModel> notices = noticeService.getAllNoticesForUser(loggedUser.getUserId(), loggedUser.getRole());
         request.setAttribute("notices", notices);
 
         // User's bookings

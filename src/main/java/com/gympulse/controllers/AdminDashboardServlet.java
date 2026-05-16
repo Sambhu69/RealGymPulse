@@ -60,7 +60,7 @@ public class AdminDashboardServlet extends HttpServlet {
         request.setAttribute("totalRevenue", membershipService.getTotalRevenue());
         request.setAttribute("pendingPasswordResets", passwordResetService.getPendingRequestsCount());
         request.setAttribute("loggedUser", loggedUser);
-        request.setAttribute("notices", noticeService.getRecentNotices(5));
+        request.setAttribute("notices", noticeService.getRecentNoticesForUser(loggedUser.getUserId(), loggedUser.getRole(), 5));
 
         request.getRequestDispatcher("/WEB-INF/pages/admin/dashboard.jsp").forward(request, response);
     }

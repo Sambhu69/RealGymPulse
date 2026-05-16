@@ -17,12 +17,41 @@ public class NoticeService {
      */
     public List<NoticeModel> getAllNotices() {
         List<NoticeModel> notices = new ArrayList<>();
-        String sql = "SELECT n.*, u.full_name AS author_name, u.role AS author_role " +
-                     "FROM notices n JOIN users u ON n.author_id = u.user_id " +
+        String sql = "SELECT n.*, u.full_name AS author_name, u.role AS author_role, r.full_name AS receiver_name " +
+                     "FROM notices n " +
+                     "JOIN users u ON n.author_id = u.user_id " +
+                     "LEFT JOIN users r ON n.receiver_id = r.user_id " +
                      "ORDER BY n.created_at DESC";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql);
              ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                notices.add(mapRow(rs));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return notices;
+    }
+
+    public List<NoticeModel> getAllNoticesForUser(int userId, String role) {
+        List<NoticeModel> notices = new ArrayList<>();
+        String sql = "SELECT n.*, u.full_name AS author_name, u.role AS author_role, r.full_name AS receiver_name " +
+                     "FROM notices n " +
+                     "JOIN users u ON n.author_id = u.user_id " +
+                     "LEFT JOIN users r ON n.receiver_id = r.user_id ";
+        
+        if (!"admin".equalsIgnoreCase(role)) {
+            sql += "WHERE n.receiver_id IS NULL AND (n.target_role = 'all' OR n.target_role = ?) OR n.receiver_id = ? OR n.author_id = ? ";
+        }
+        sql += "ORDER BY n.created_at DESC";
+
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            if (!"admin".equalsIgnoreCase(role)) {
+                pst.setString(1, role.toLowerCase());
+                pst.setInt(2, userId);
+                pst.setInt(3, userId);
+            }
+            ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 notices.add(mapRow(rs));
             }
@@ -35,8 +64,10 @@ public class NoticeService {
      */
     public List<NoticeModel> getRecentNotices(int limit) {
         List<NoticeModel> notices = new ArrayList<>();
-        String sql = "SELECT n.*, u.full_name AS author_name, u.role AS author_role " +
-                     "FROM notices n JOIN users u ON n.author_id = u.user_id " +
+        String sql = "SELECT n.*, u.full_name AS author_name, u.role AS author_role, r.full_name AS receiver_name " +
+                     "FROM notices n " +
+                     "JOIN users u ON n.author_id = u.user_id " +
+                     "LEFT JOIN users r ON n.receiver_id = r.user_id " +
                      "ORDER BY n.created_at DESC LIMIT ?";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql)) {
@@ -49,17 +80,52 @@ public class NoticeService {
         return notices;
     }
 
+    public List<NoticeModel> getRecentNoticesForUser(int userId, String role, int limit) {
+        List<NoticeModel> notices = new ArrayList<>();
+        String sql = "SELECT n.*, u.full_name AS author_name, u.role AS author_role, r.full_name AS receiver_name " +
+                     "FROM notices n " +
+                     "JOIN users u ON n.author_id = u.user_id " +
+                     "LEFT JOIN users r ON n.receiver_id = r.user_id ";
+
+        if (!"admin".equalsIgnoreCase(role)) {
+            sql += "WHERE n.receiver_id IS NULL AND (n.target_role = 'all' OR n.target_role = ?) OR n.receiver_id = ? OR n.author_id = ? ";
+        }
+        sql += "ORDER BY n.created_at DESC LIMIT ?";
+
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            int paramIndex = 1;
+            if (!"admin".equalsIgnoreCase(role)) {
+                pst.setString(paramIndex++, role.toLowerCase());
+                pst.setInt(paramIndex++, userId);
+                pst.setInt(paramIndex++, userId);
+            }
+            pst.setInt(paramIndex, limit);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                notices.add(mapRow(rs));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return notices;
+    }
+
     /**
      * Creates a new notice.
      */
-    public boolean addNotice(int authorId, String title, String message, String category) {
-        String sql = "INSERT INTO notices (author_id, title, message, category) VALUES (?, ?, ?, ?)";
+    public boolean addNotice(int authorId, String title, String message, String category, Integer receiverId, String targetRole) {
+        String sql = "INSERT INTO notices (author_id, title, message, category, receiver_id, target_role) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql)) {
             pst.setInt(1, authorId);
             pst.setString(2, title);
             pst.setString(3, message);
             pst.setString(4, category);
+            if (receiverId != null) {
+                pst.setInt(5, receiverId);
+            } else {
+                pst.setNull(5, Types.INTEGER);
+            }
+            pst.setString(6, targetRole != null ? targetRole : "all");
             return pst.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,8 +152,10 @@ public class NoticeService {
      * Gets a single notice by ID.
      */
     public NoticeModel getNoticeById(int noticeId) {
-        String sql = "SELECT n.*, u.full_name AS author_name, u.role AS author_role " +
-                     "FROM notices n JOIN users u ON n.author_id = u.user_id " +
+        String sql = "SELECT n.*, u.full_name AS author_name, u.role AS author_role, r.full_name AS receiver_name " +
+                     "FROM notices n " +
+                     "JOIN users u ON n.author_id = u.user_id " +
+                     "LEFT JOIN users r ON n.receiver_id = r.user_id " +
                      "WHERE n.notice_id = ?";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql)) {
@@ -125,9 +193,15 @@ public class NoticeService {
         n.setTitle(rs.getString("title"));
         n.setMessage(rs.getString("message"));
         n.setCategory(rs.getString("category"));
+        n.setTargetRole(rs.getString("target_role"));
         n.setCreatedAt(rs.getString("created_at"));
         n.setAuthorName(rs.getString("author_name"));
         n.setAuthorRole(rs.getString("author_role"));
+        int rId = rs.getInt("receiver_id");
+        if (!rs.wasNull()) {
+            n.setReceiverId(rId);
+            n.setReceiverName(rs.getString("receiver_name"));
+        }
         return n;
     }
 }

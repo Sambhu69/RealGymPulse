@@ -6,6 +6,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import com.gympulse.model.UserModel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -29,8 +31,13 @@ public class NoticeApiServlet extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
-        List<NoticeModel> notices = noticeService.getRecentNotices(5);
+        HttpSession session = request.getSession(false);
+        UserModel user = (UserModel) session.getAttribute("loggedUser");
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        List<NoticeModel> notices = noticeService.getRecentNoticesForUser(user.getUserId(), user.getRole(), 5);
 
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < notices.size(); i++) {

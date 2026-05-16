@@ -118,6 +118,21 @@ public class UserService {
         return members;
     }
 
+    public List<UserModel> getAllUsers() {
+        List<UserModel> users = new ArrayList<>();
+        String sql = "SELECT * FROM users ORDER BY full_name ASC";
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     public boolean updateUser(UserModel user) {
         String sql = "UPDATE users SET full_name = ?, phone = ?, status = ? WHERE user_id = ?";
         try (Connection conn = DBConfig.getConnection();

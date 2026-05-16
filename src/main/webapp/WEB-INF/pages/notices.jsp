@@ -63,7 +63,7 @@
                 <form action="${pageContext.request.contextPath}/notices" method="POST" class="space-y-4">
                     <input type="hidden" name="action" value="post">
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-zinc-400 mb-1">Title</label>
                             <input type="text" name="title" maxlength="200" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm transition-colors" placeholder="e.g. Morning Yoga Cancelled" required>
@@ -78,6 +78,17 @@
                                 <option value="event">Event</option>
                             </select>
                         </div>
+                        <c:if test="${userRole == 'admin'}">
+                            <div>
+                                <label class="block text-xs font-medium text-zinc-400 mb-1">Target Audience</label>
+                                <select name="targetRole" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm transition-colors">
+                                    <option value="all">Universal (All Users)</option>
+                                    <option value="member">Members Only</option>
+                                    <option value="trainer">Trainers Only</option>
+                                    <option value="instructor">Instructors Only</option>
+                                </select>
+                            </div>
+                        </c:if>
                     </div>
 
                     <div>
@@ -129,7 +140,15 @@
                                 <p class="text-sm text-zinc-400 leading-relaxed whitespace-pre-line">${n.message}</p>
 
                                 <div class="mt-3 flex items-center gap-3 text-xs text-zinc-500">
-                                    <span class="font-medium text-zinc-400">${n.authorName}</span>
+                                    <span class="font-medium text-zinc-400">From: ${n.authorName}</span>
+                                    <c:if test="${not empty n.targetRole && n.targetRole != 'all'}">
+                                        <span>&middot;</span>
+                                        <span class="font-medium text-blue-400 capitalize">To: ${n.targetRole}s</span>
+                                    </c:if>
+                                    <c:if test="${not empty n.receiverName}">
+                                        <span>&middot;</span>
+                                        <span class="font-medium text-purple-400">Direct Message to: ${n.receiverName}</span>
+                                    </c:if>
                                     <span>&middot;</span>
                                     <span>${n.createdAt}</span>
                                 </div>

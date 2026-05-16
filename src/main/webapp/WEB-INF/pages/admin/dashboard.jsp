@@ -183,7 +183,39 @@
         </a>
 
         
-        
+        <a href="${pageContext.request.contextPath}/notices" 
+           class="flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-600 rounded-xl transition-all group">
+            <div class="flex items-center gap-3">
+                <div class="text-zinc-400 group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <span class="font-medium text-zinc-300 group-hover:text-white transition-colors">Manage Notices</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-zinc-400 group-hover:translate-x-1 transition-all"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/messages" 
+           class="flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-600 rounded-xl transition-all group">
+            <div class="flex items-center gap-3">
+                <div class="text-zinc-400 group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <span class="font-medium text-zinc-300 group-hover:text-white transition-colors">Direct Messages</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-zinc-400 group-hover:translate-x-1 transition-all"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/queries" 
+           class="flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-600 rounded-xl transition-all group">
+            <div class="flex items-center gap-3">
+                <div class="text-zinc-400 group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <span class="font-medium text-zinc-300 group-hover:text-white transition-colors">Contact Queries</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-zinc-400 group-hover:translate-x-1 transition-all"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+
     </div>
 
     <!-- Notice Board Section -->

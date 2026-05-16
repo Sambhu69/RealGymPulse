@@ -3,6 +3,7 @@ package com.gympulse.controllers;
 import com.gympulse.model.NoticeModel;
 import com.gympulse.model.UserModel;
 import com.gympulse.service.NoticeService;
+import com.gympulse.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,31 +21,41 @@ import java.util.List;
 public class NoticeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private NoticeService noticeService;
+    private UserService userService;
 
     @Override
     public void init() throws ServletException {
         noticeService = new NoticeService();
+        userService = new UserService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<NoticeModel> notices = noticeService.getAllNotices();
-        request.setAttribute("notices", notices);
-
         HttpSession session = request.getSession(false);
+        UserModel user = null;
         if (session != null) {
-            UserModel user = (UserModel) session.getAttribute("loggedUser");
-            if (user != null) {
-                boolean isAdmin = "admin".equalsIgnoreCase(user.getRole());
-                boolean isTrainer = "trainer".equalsIgnoreCase(user.getRole());
-                boolean isInstructor = "instructor".equalsIgnoreCase(user.getRole());
-                boolean canPost = isAdmin || isTrainer || isInstructor;
-                request.setAttribute("canPost", canPost);
-            }
+            user = (UserModel) session.getAttribute("loggedUser");
         }
 
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        List<NoticeModel> notices = noticeService.getAllNoticesForUser(user.getUserId(), user.getRole());
+        request.setAttribute("notices", notices);
+
+        boolean isAdmin = "admin".equalsIgnoreCase(user.getRole());
+        boolean isTrainer = "trainer".equalsIgnoreCase(user.getRole());
+        boolean isInstructor = "instructor".equalsIgnoreCase(user.getRole());
+        boolean canPost = isAdmin || isTrainer || isInstructor;
+        request.setAttribute("canPost", canPost);
+
+        if (isAdmin) {
+            request.setAttribute("usersList", userService.getAllUsers());
+        }
         request.getRequestDispatcher("/WEB-INF/pages/notices.jsp").forward(request, response);
     }
 
@@ -81,6 +92,7 @@ public class NoticeServlet extends HttpServlet {
             String title = request.getParameter("title");
             String message = request.getParameter("message");
             String category = request.getParameter("category");
+            String targetRole = request.getParameter("targetRole");
 
             if (title == null || title.trim().isEmpty() || message == null || message.trim().isEmpty()) {
                 response.sendRedirect(request.getContextPath() + "/notices?error=invalid_data");
@@ -90,7 +102,7 @@ public class NoticeServlet extends HttpServlet {
                 category = "general";
             }
 
-            if (noticeService.addNotice(user.getUserId(), title.trim(), message.trim(), category)) {
+            if (noticeService.addNotice(user.getUserId(), title.trim(), message.trim(), category, null, targetRole)) {
                 response.sendRedirect(request.getContextPath() + "/notices?success=notice_posted");
             } else {
                 response.sendRedirect(request.getContextPath() + "/notices?error=post_failed");
