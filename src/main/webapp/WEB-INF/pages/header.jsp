@@ -23,8 +23,39 @@
     }
 </script>
 
-<!-- External CSS (professor's guideline: use external CSS, avoid inline styles) -->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+<!-- External CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=1.2">
+
+<style>
+    /* Global Scrollbar Reset for all elements */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #27272a #09090b;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #09090b;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #27272a;
+        border-radius: 10px;
+        border: 2px solid #09090b;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3f3f46;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+</style>
 
 <% 
     String uri = request.getRequestURI();
