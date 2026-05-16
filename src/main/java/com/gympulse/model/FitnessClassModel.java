@@ -17,6 +17,7 @@ public class FitnessClassModel implements Serializable {
     private int enrolled;
     private String description;
     private String status;
+    private int completedSessions;
 
     /** No-arg constructor */
     public FitnessClassModel() {}
@@ -62,6 +63,9 @@ public class FitnessClassModel implements Serializable {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public int getCompletedSessions() { return completedSessions; }
+    public void setCompletedSessions(int completedSessions) { this.completedSessions = completedSessions; }
 
     @Override
     public String toString() {

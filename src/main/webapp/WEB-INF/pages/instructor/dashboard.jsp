@@ -12,7 +12,11 @@
 
 <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
     
-    <!-- Monday Holiday Notice -->
+    <c:if test="${param.success == 'refreshed'}">
+        <div class="mb-6 px-4 py-3 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl backdrop-blur-md">
+            <p class="font-medium text-sm">Class successfully renewed for tomorrow!</p>
+        </div>
+    </c:if>
     <c:if test="${isMonday}">
         <div class="mb-8 p-6 bg-amber-500/10 border border-amber-500/20 rounded-3xl backdrop-blur-xl flex items-center gap-4 animate-pulse">
             <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
@@ -114,8 +118,18 @@
                                                     </button>
                                                 </form>
                                             </c:when>
-                                            <c:when test="${c.status == 'completed'}">
-                                                <span class="px-3 py-1 bg-zinc-800 text-zinc-500 text-[10px] font-bold uppercase rounded-full border border-zinc-700/50">Completed</span>
+                                             <c:when test="${c.status == 'completed'}">
+                                                <div class="flex items-center gap-3">
+                                                    <span class="px-3 py-1 bg-zinc-800 text-zinc-500 text-[10px] font-bold uppercase rounded-full border border-zinc-700/50">Completed</span>
+                                                    <form action="${pageContext.request.contextPath}/instructor/dashboard" method="POST">
+                                                        <input type="hidden" name="action" value="refresh">
+                                                        <input type="hidden" name="classId" value="${c.classId}">
+                                                        <button type="submit" class="px-3 py-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase rounded-full border border-blue-500/20 transition-all flex items-center gap-1.5 group">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:rotate-180 transition-transform duration-500"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+                                                            Renew Tomorrow
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </c:when>
                                             <c:otherwise>
                                                 <span class="px-3 py-1 bg-red-500/10 text-red-400 text-[10px] font-bold uppercase rounded-full border border-red-500/20">${c.status}</span>

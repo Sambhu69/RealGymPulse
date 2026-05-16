@@ -260,10 +260,31 @@ public class ClassService {
 
     public boolean updateClassStatus(int classId, String status) {
         String sql = "UPDATE fitness_classes SET status = ? WHERE class_id = ?";
+        // If status is completed, also increment completed_sessions
+        if ("completed".equals(status)) {
+            sql = "UPDATE fitness_classes SET status = ?, completed_sessions = completed_sessions + 1 WHERE class_id = ?";
+        }
+        
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql)) {
             pst.setString(1, status);
             pst.setInt(2, classId);
+            return pst.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Refreshes a completed class for the next day.
+     * Resets enrolled count to 0 and sets status back to available.
+     */
+    public boolean refreshClassForTomorrow(int classId) {
+        String sql = "UPDATE fitness_classes SET schedule_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY), enrolled = 0, status = 'available' WHERE class_id = ?";
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, classId);
             return pst.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -293,6 +314,7 @@ public class ClassService {
         fc.setEnrolled(rs.getInt("enrolled"));
         fc.setDescription(rs.getString("description"));
         fc.setStatus(rs.getString("status"));
+        fc.setCompletedSessions(rs.getInt("completed_sessions"));
         return fc;
     }
 

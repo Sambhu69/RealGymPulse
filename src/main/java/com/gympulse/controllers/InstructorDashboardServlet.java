@@ -49,7 +49,7 @@ public class InstructorDashboardServlet extends HttpServlet {
         // Stats
         long upcomingCount = allClasses.stream().filter(c -> "available".equals(c.getStatus())).count();
         long activeCount = allClasses.stream().filter(c -> "in_progress".equals(c.getStatus())).count();
-        long completedCount = allClasses.stream().filter(c -> "completed".equals(c.getStatus())).count();
+        long completedCount = allClasses.stream().mapToLong(FitnessClassModel::getCompletedSessions).sum();
 
         request.setAttribute("classes", allClasses);
         request.setAttribute("upcomingCount", upcomingCount);
@@ -93,6 +93,9 @@ public class InstructorDashboardServlet extends HttpServlet {
             } else if ("close".equals(action)) {
                 classService.updateClassStatus(classId, "completed");
                 response.sendRedirect(request.getContextPath() + "/instructor/dashboard?success=closed");
+            } else if ("refresh".equals(action)) {
+                classService.refreshClassForTomorrow(classId);
+                response.sendRedirect(request.getContextPath() + "/instructor/dashboard?success=refreshed");
             } else {
                 response.sendRedirect(request.getContextPath() + "/instructor/dashboard");
             }
