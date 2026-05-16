@@ -101,7 +101,27 @@ public class ClassService {
             conn = DBConfig.getConnection();
             conn.setAutoCommit(false); // Start Transaction
 
-            // 2. Insert into class_bookings
+            // 2. Lock class record and check capacity
+            String checkCapacitySql = "SELECT enrolled, capacity, status FROM fitness_classes WHERE class_id = ? FOR UPDATE";
+            try (PreparedStatement pst = conn.prepareStatement(checkCapacitySql)) {
+                pst.setInt(1, classId);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int enrolled = rs.getInt("enrolled");
+                    int capacity = rs.getInt("capacity");
+                    String status = rs.getString("status");
+                    
+                    if (enrolled >= capacity || "full".equals(status) || "cancelled".equals(status)) {
+                        conn.rollback();
+                        return false;
+                    }
+                } else {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // 3. Insert into class_bookings
             String bookingSql = "INSERT INTO class_bookings (user_id, class_id, booking_date, status) VALUES (?, ?, NOW(), 'confirmed')";
             try (PreparedStatement pst = conn.prepareStatement(bookingSql)) {
                 pst.setInt(1, userId);
@@ -109,7 +129,7 @@ public class ClassService {
                 pst.executeUpdate();
             }
 
-            // 3. Increment enrolled and update status if full
+            // 4. Increment enrolled and update status if full
             String updateClassSql = "UPDATE fitness_classes SET enrolled = enrolled + 1, status = IF(enrolled + 1 >= capacity, 'full', 'available') WHERE class_id = ?";
             try (PreparedStatement pst = conn.prepareStatement(updateClassSql)) {
                 pst.setInt(1, classId);

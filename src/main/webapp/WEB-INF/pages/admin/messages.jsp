@@ -186,6 +186,13 @@
         updateSelectedUI();
     }
 
+    function escapeHTML(str) {
+        if (!str) return "";
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     function updateSelectedUI() {
         const container = document.getElementById('selectedUsersContainer');
         const hiddenInput = document.getElementById('formReceiverIds');
@@ -205,9 +212,9 @@
             const badge = document.createElement('div');
             badge.className = 'flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 transition-colors border border-zinc-700 px-3 py-1 rounded-lg text-sm text-white animate-in zoom-in duration-200 shadow-sm';
             badge.innerHTML = `
-                <span class="font-medium">\${u.name}</span>
-                <span class="text-[9px] font-bold text-zinc-400 tracking-wider uppercase bg-zinc-900 px-1.5 py-0.5 rounded-md">\${u.role}</span>
-                <button type="button" onclick="removeUser('\${id}')" class="text-zinc-400 hover:text-red-400 focus:outline-none ml-1 transition-colors">
+                <span class="font-medium">${escapeHTML(u.name)}</span>
+                <span class="text-[9px] font-bold text-zinc-400 tracking-wider uppercase bg-zinc-900 px-1.5 py-0.5 rounded-md">${u.role}</span>
+                <button type="button" onclick="removeUser('${id}')" class="text-zinc-400 hover:text-red-400 focus:outline-none ml-1 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             `;

@@ -136,18 +136,18 @@
                                     <span class="text-[10px] text-zinc-500 uppercase tracking-wider font-medium">${n.authorRole}</span>
                                 </div>
 
-                                <h3 class="text-base font-bold text-white mb-1 truncate">${n.title}</h3>
-                                <p class="text-sm text-zinc-400 leading-relaxed whitespace-pre-line">${n.message}</p>
+                                <h3 class="text-base font-bold text-white mb-1 truncate"><c:out value="${n.title}"/></h3>
+                                <p class="text-sm text-zinc-400 leading-relaxed whitespace-pre-line"><c:out value="${n.message}"/></p>
 
                                 <div class="mt-3 flex items-center gap-3 text-xs text-zinc-500">
-                                    <span class="font-medium text-zinc-400">From: ${n.authorName}</span>
+                                    <span class="font-medium text-zinc-400">From: <c:out value="${n.authorName}"/></span>
                                     <c:if test="${not empty n.targetRole && n.targetRole != 'all'}">
                                         <span>&middot;</span>
                                         <span class="font-medium text-blue-400 capitalize">To: ${n.targetRole}s</span>
                                     </c:if>
                                     <c:if test="${not empty n.receiverName}">
                                         <span>&middot;</span>
-                                        <span class="font-medium text-purple-400">Direct Message to: ${n.receiverName}</span>
+                                        <span class="font-medium text-purple-400">Direct Message to: <c:out value="${n.receiverName}"/></span>
                                     </c:if>
                                     <span>&middot;</span>
                                     <span>${n.createdAt}</span>

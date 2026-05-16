@@ -356,6 +356,13 @@
         xhr.send();
     }
 
+    function escapeHTML(str) {
+        if (!str) return "";
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     function renderNotifications(items) {
         var list = document.getElementById('gp-notif-list');
         var dot = document.getElementById('gp-notif-dot');
@@ -393,9 +400,9 @@
             html += '<a href="' + contextPath + '/notices" class="block px-4 py-3 hover:bg-zinc-800/50 transition-colors border-b border-zinc-800/50 last:border-0">';
             html += '<div class="flex items-center gap-2 mb-1">';
             html += '<span class="text-[9px] uppercase font-bold px-1.5 py-px rounded ' + catClass + '">' + catLabel + '</span>';
-            html += '<span class="text-[10px] text-zinc-600">' + n.authorName + '</span>';
+            html += '<span class="text-[10px] text-zinc-600">' + escapeHTML(n.authorName) + '</span>';
             html += '</div>';
-            html += '<p class="text-xs font-medium text-zinc-200 truncate">' + n.title + '</p>';
+            html += '<p class="text-xs font-medium text-zinc-200 truncate">' + escapeHTML(n.title) + '</p>';
             html += '<p class="text-[10px] text-zinc-500 mt-0.5">' + formatTime(n.createdAt) + '</p>';
             html += '</a>';
         }
