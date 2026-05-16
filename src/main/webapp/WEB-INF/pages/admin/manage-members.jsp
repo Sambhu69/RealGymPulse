@@ -123,7 +123,7 @@
                         <select name="planId" class="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm" required>
                             <option value="">-- Choose a Plan --</option>
                             <c:forEach items="${allPlans}" var="plan">
-                                <option value="${plan.planId}">${plan.planName} - $${plan.price} (${plan.durationMonths} Months)</option>
+                                <option value="${plan.planId}">${plan.planName} - Rs.${plan.price} (${plan.durationMonths} Months)</option>
                             </c:forEach>
                         </select>
                     </div>

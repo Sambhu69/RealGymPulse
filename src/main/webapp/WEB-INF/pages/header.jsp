@@ -33,6 +33,7 @@
     boolean isAdminClasses = uri.endsWith("admin/classes");
     boolean isAdminPlans = uri.endsWith("admin/plans");
     boolean isAdminTrainers = uri.endsWith("admin/trainers");
+    boolean isAdminInstructors = uri.endsWith("admin/instructors");
     boolean isMemberDashboard = uri.endsWith("member/dashboard");
     boolean isMemberProfile = uri.endsWith("member/profile");
     boolean isInstructorProfile = uri.endsWith("instructor/profile");
@@ -96,6 +97,13 @@
                            class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
                            <%= isAdminTrainers ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
                            Trainers
+                        </a>
+                    </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/admin/instructors" 
+                           class="block px-4 py-2 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-200 
+                           <%= isAdminInstructors ? "nav-tab-active" : "text-zinc-400 hover:text-white hover:bg-white/5" %>">
+                           Instructors
                         </a>
                     </li>
                     <li>

@@ -15,7 +15,7 @@ public class TrainerService {
 
     public List<TrainerProfileModel> getAllTrainers() {
         List<TrainerProfileModel> trainers = new ArrayList<>();
-        String sql = "SELECT p.*, u.full_name, u.profile_image, u.status FROM trainer_profiles p " +
+        String sql = "SELECT p.*, u.full_name, u.email, u.phone, u.profile_image, u.status FROM trainer_profiles p " +
                      "JOIN users u ON p.user_id = u.user_id WHERE u.role = 'trainer'";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql);
@@ -28,6 +28,8 @@ public class TrainerService {
                 tp.setSpecializations(rs.getString("specializations"));
                 tp.setRating(rs.getDouble("rating"));
                 tp.setFullName(rs.getString("full_name"));
+                tp.setEmail(rs.getString("email"));
+                tp.setPhone(rs.getString("phone"));
                 tp.setProfileImage(rs.getString("profile_image"));
                 tp.setStatus(rs.getString("status"));
                 trainers.add(tp);

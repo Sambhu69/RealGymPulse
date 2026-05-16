@@ -22,11 +22,11 @@
                     <h3 class="font-bold text-lg text-zinc-200">${plan.planName}</h3>
                     <p class="text-xs text-zinc-500">${plan.durationMonths} Month(s)</p>
                 </div>
-                <span class="font-bold text-xl text-white">$${plan.price}</span>
+                <span class="font-bold text-xl text-white">Rs.${plan.price}</span>
             </div>
             <div class="flex justify-between items-center font-bold text-lg text-emerald-400">
                 <span>Total Due</span>
-                <span>$${plan.price}</span>
+                <span>Rs.${plan.price}</span>
             </div>
         </div>
 
@@ -67,7 +67,7 @@
                 </div>
 
                 <button type="submit" class="w-full mt-4 py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-md transition-colors duration-200">
-                    Pay $${plan.price}
+                    Pay Rs.${plan.price}
                 </button>
             </form>
         </div>

@@ -25,7 +25,7 @@
                 </c:if>
                 <h3 class="text-2xl font-bold text-white mb-2">${plan.planName}</h3>
                 <div class="mb-6">
-                    <span class="text-4xl font-extrabold text-white">$${plan.price}</span>
+                    <span class="text-4xl font-extrabold text-white">Rs.${plan.price}</span>
                     <span class="text-zinc-500 text-sm">/ ${plan.durationMonths} Mo</span>
                 </div>
                 <p class="text-zinc-400 text-sm mb-8 flex-grow">${plan.description}</p>

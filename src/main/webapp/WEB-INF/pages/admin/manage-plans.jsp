@@ -46,7 +46,7 @@
                         <input type="number" name="durationMonths" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm transition-colors" min="1" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-zinc-400 mb-1">Price ($)</label>
+                        <label class="block text-xs font-medium text-zinc-400 mb-1">Price (Rs.)</label>
                         <input type="number" name="price" step="0.01" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm transition-colors" min="0.01" required>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-zinc-400 border-b border-zinc-800/50 group-last:border-0">${plan.durationMonths} months</td>
-                            <td class="px-6 py-4 text-zinc-200 font-semibold border-b border-zinc-800/50 group-last:border-0">$${plan.price}</td>
+                            <td class="px-6 py-4 text-zinc-200 font-semibold border-b border-zinc-800/50 group-last:border-0">Rs.${plan.price}</td>
                             <td class="px-6 py-4 text-zinc-400 truncate max-w-[200px] border-b border-zinc-800/50 group-last:border-0" title="${plan.description}">
                                 ${plan.description}
                             </td>
@@ -123,7 +123,7 @@
                                                 <input type="number" name="durationMonths" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm" value="${plan.durationMonths}" min="1">
                                             </div>
                                             <div>
-                                                <label class="block text-xs font-medium text-zinc-400 mb-1">Price ($)</label>
+                                                <label class="block text-xs font-medium text-zinc-400 mb-1">Price (Rs.)</label>
                                                 <input type="number" name="price" step="0.01" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm" value="${plan.price}" min="0.01">
                                             </div>
                                         </div>

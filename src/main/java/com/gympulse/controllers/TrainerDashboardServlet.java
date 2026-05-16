@@ -64,7 +64,7 @@ public class TrainerDashboardServlet extends HttpServlet {
             "FROM trainer_bookings b " +
             "JOIN trainer_slots s ON b.slot_id = s.slot_id " +
             "JOIN users u ON b.member_id = u.user_id " +
-            "WHERE b.trainer_id = ? AND b.status = 'scheduled' AND s.slot_date >= CURDATE() " +
+            "WHERE b.trainer_id = ? AND b.status IN ('scheduled', 'completed') AND s.slot_date >= CURDATE() " +
             "ORDER BY s.slot_date, s.start_time LIMIT 10";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sessionSql)) {
@@ -93,6 +93,39 @@ public class TrainerDashboardServlet extends HttpServlet {
         request.setAttribute("pageTitle", "Trainer Dashboard");
 
         request.getRequestDispatcher("/WEB-INF/pages/trainer/dashboard.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        UserModel loggedUser = (UserModel) session.getAttribute("loggedUser");
+
+        if (loggedUser == null || !"trainer".equals(loggedUser.getRole())) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
+        String action = request.getParameter("action");
+        if ("complete".equals(action)) {
+            try {
+                int bookingId = Integer.parseInt(request.getParameter("bookingId"));
+                String sql = "UPDATE trainer_bookings SET status = 'completed' WHERE booking_id = ? AND trainer_id = ?";
+                try (Connection conn = DBConfig.getConnection();
+                     PreparedStatement pst = conn.prepareStatement(sql)) {
+                    pst.setInt(1, bookingId);
+                    pst.setInt(2, loggedUser.getUserId());
+                    pst.executeUpdate();
+                }
+                response.sendRedirect(request.getContextPath() + "/trainer/dashboard?success=completed");
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect(request.getContextPath() + "/trainer/dashboard?error=failed");
+            }
+        } else {
+            response.sendRedirect(request.getContextPath() + "/trainer/dashboard");
+        }
     }
 }
 

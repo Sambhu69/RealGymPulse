@@ -60,9 +60,27 @@
                                         <p class="font-semibold text-white">${s.memberName}</p>
                                         <p class="text-sm text-zinc-400 mt-0.5">${s.date} &bull; ${s.time}</p>
                                     </div>
-                                    <span class="px-3 py-1 text-xs font-bold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase">
-                                        ${s.status}
-                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <c:choose>
+                                            <c:when test="${s.status == 'scheduled'}">
+                                                <form action="${pageContext.request.contextPath}/trainer/dashboard" method="POST">
+                                                    <input type="hidden" name="action" value="complete">
+                                                    <input type="hidden" name="bookingId" value="${s.bookingId}">
+                                                    <button type="submit" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-lg transition-colors shadow-lg shadow-emerald-500/20">
+                                                        Complete Session
+                                                    </button>
+                                                </form>
+                                            </c:when>
+                                            <c:when test="${s.status == 'completed'}">
+                                                <span class="px-3 py-1 bg-zinc-800 text-zinc-500 text-[10px] font-bold uppercase rounded-full border border-zinc-700/50">Completed</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="px-3 py-1 text-xs font-bold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase">
+                                                    ${s.status}
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
                                 </div>
                             </div>
                         </c:forEach>

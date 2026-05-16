@@ -141,19 +141,39 @@
         <%-- Right Sidebar: Schedule & Rating --%>
         <div class="space-y-6">
             <div class="bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 shadow-xl">
-                <h3 class="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">Quick Calendar</h3>
-                <div class="grid grid-cols-7 gap-1 text-center text-[10px] text-zinc-600 mb-2">
-                    <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-semibold text-zinc-400 uppercase tracking-widest">Quick Calendar</h3>
+                    <span class="text-[10px] bg-zinc-800 px-2 py-0.5 rounded text-zinc-300 font-bold">${nepaliDate.monthName} ${nepaliDate.year}</span>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-[10px] text-zinc-600 mb-2 font-bold">
+                    <span class="text-red-400/60">M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
                 </div>
                 <div class="grid grid-cols-7 gap-1">
-                    <c:forEach var="i" begin="1" end="31">
-                        <div class="aspect-square flex items-center justify-center text-xs rounded-lg transition-colors border border-transparent
-                                    ${i == 10 || i == 11 || i == 12 ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'text-zinc-500 hover:bg-zinc-800/50'}">
+                    <%-- Empty slots for start day offset --%>
+                    <c:forEach var="s" begin="1" end="${startDayOfWeek - 1}">
+                        <div class="aspect-square"></div>
+                    </c:forEach>
+                    
+                    <%-- Day slots --%>
+                    <c:forEach var="i" begin="1" end="${daysInMonth}">
+                        <c:set var="currentDayOfWeek" value="${(startDayOfWeek + i - 2) % 7 + 1}" />
+                        <c:set var="isHoliday" value="${currentDayOfWeek == 1}" />
+                        <div class="aspect-square flex items-center justify-center text-xs rounded-lg transition-colors border 
+                                    ${i == todayDay ? 'bg-white text-black font-bold border-white' : 
+                                      isHoliday ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
+                                      'text-zinc-500 hover:bg-zinc-800/50 border-transparent'}">
                             ${i}
                         </div>
                     </c:forEach>
                 </div>
-                <p class="mt-4 text-[10px] text-zinc-500 italic">* Highlighted dates indicate class days.</p>
+                <div class="mt-4 flex flex-col gap-1">
+                    <p class="text-[10px] text-zinc-500 italic flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-red-500/40"></span> Monday Holiday (No Classes)
+                    </p>
+                    <p class="text-[10px] text-zinc-500 italic flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-white"></span> Today's Date
+                    </p>
+                </div>
             </div>
 
             <div class="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 backdrop-blur-xl border border-white/5 rounded-2xl p-6 shadow-xl">

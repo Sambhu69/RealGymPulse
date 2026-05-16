@@ -13,7 +13,8 @@ public class FixTrainerPasswords {
         
         // Also reset locked status and failed attempts from failed login attempts
         String sql = "UPDATE users SET password = ?, status = 'active', failed_attempts = 0, locked_until = NULL " +
-                     "WHERE email IN ('alex.trainer@gympulse.com', 'sarah.trainer@gympulse.com')";
+                     "WHERE email IN ('alex.trainer@gympulse.com', 'sarah.trainer@gympulse.com', " +
+                     "'david.instructor@gympulse.com', 'emma.instructor@gympulse.com', 'admin@gympulse.com')";
         
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql)) {

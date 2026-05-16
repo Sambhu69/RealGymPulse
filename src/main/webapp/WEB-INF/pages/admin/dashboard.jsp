@@ -24,6 +24,22 @@
         </div>
     </c:if>
 
+    <!-- Notification Banner for Password Resets -->
+    <c:if test="${pendingPasswordResets > 0}">
+        <div class="mb-6 px-5 py-4 bg-amber-500/10 border border-amber-500/30 rounded-xl backdrop-blur-md flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-amber-500/20 rounded-lg text-amber-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-amber-400 text-sm md:text-base">Action Required</h3>
+                    <p class="text-zinc-300 text-sm mt-0.5">There are <span class="font-bold text-white">${pendingPasswordResets} pending</span> password reset requests waiting for your approval.</p>
+                </div>
+            </div>
+            <a href="${pageContext.request.contextPath}/admin/password-resets" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm rounded-lg transition-colors">Review Now</a>
+        </div>
+    </c:if>
+
     <div class="mb-10">
         <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
             Admin Overview
@@ -32,7 +48,7 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         
         <div class="relative overflow-hidden bg-zinc-900/40 border border-zinc-800 rounded-2xl p-6 backdrop-blur-xl group hover:border-zinc-700 transition-all">
             <div class="absolute -top-10 -right-10 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all"></div>
@@ -75,15 +91,24 @@
             <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center justify-center mb-4">
                 <span class="text-xl">💰</span>
             </div>
-            <h2 class="text-4xl font-bold text-emerald-400 mb-1 group-hover:-translate-y-1 transition-transform">$${totalRevenue}</h2>
+            <h2 class="text-4xl font-bold text-emerald-400 mb-1 group-hover:-translate-y-1 transition-transform">Rs.${totalRevenue}</h2>
             <p class="text-sm font-medium text-zinc-500 uppercase tracking-wider">Total Revenue</p>
+        </div>
+
+        <div class="relative overflow-hidden bg-zinc-900/40 border border-zinc-800 rounded-2xl p-6 backdrop-blur-xl group hover:border-zinc-700 transition-all">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all"></div>
+            <div class="w-12 h-12 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+                <span class="text-xl">👨‍🏫</span>
+            </div>
+            <h2 class="text-4xl font-bold text-white mb-1 group-hover:-translate-y-1 transition-transform">${totalInstructors}</h2>
+            <p class="text-sm font-medium text-zinc-500 uppercase tracking-wider">Total Instructors</p>
         </div>
         
     </div>
 
     <!-- Quick Actions -->
     <h2 class="text-lg font-semibold tracking-tight text-white mb-6">Quick Actions</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
         
         <a href="${pageContext.request.contextPath}/admin/members" 
            class="flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-600 rounded-xl transition-all group">
@@ -128,8 +153,103 @@
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-zinc-400 group-hover:translate-x-1 transition-all"><path d="m9 18 6-6-6-6"/></svg>
         </a>
+
+        <a href="${pageContext.request.contextPath}/admin/instructors" 
+           class="flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-600 rounded-xl transition-all group">
+            <div class="flex items-center gap-3">
+                <div class="text-zinc-400 group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                </div>
+                <span class="font-medium text-zinc-300 group-hover:text-white transition-colors">Manage Instructors</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-zinc-400 group-hover:translate-x-1 transition-all"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/password-resets" 
+           class="flex items-center justify-between p-4 bg-zinc-900/50 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-600 rounded-xl transition-all group">
+            <div class="flex items-center gap-3">
+                <div class="text-zinc-400 group-hover:text-white transition-colors relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <c:if test="${pendingPasswordResets > 0}">
+                        <span class="absolute -top-2 -right-2 flex h-4 w-4">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-4 w-4 bg-amber-500 items-center justify-center text-[10px] font-bold text-black border border-zinc-900">${pendingPasswordResets}</span>
+                        </span>
+                    </c:if>
+                </div>
+                <span class="font-medium text-zinc-300 group-hover:text-white transition-colors">Password Resets</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-zinc-400 group-hover:translate-x-1 transition-all"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+
+        
         
     </div>
+
+    <!-- Notice Board Section -->
+    <section>
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-xl font-semibold tracking-tight text-zinc-100 flex items-center gap-2">
+                    Notice Board
+                </h2>
+                <p class="text-zinc-400 text-sm mt-1">Stay updated with the latest announcements from staff and trainers.</p>
+            </div>
+            <a href="${pageContext.request.contextPath}/notices" class="text-sm px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg transition-colors font-medium">Manage Notices</a>
+        </div>
+
+        <!-- Notices List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <c:choose>
+                <c:when test="${not empty notices}">
+                    <c:forEach items="${notices}" var="n">
+                        <div class="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-5 backdrop-blur-xl hover:border-zinc-700 transition-all relative overflow-hidden flex flex-col">
+                            <div class="flex flex-wrap items-center gap-2 mb-3">
+                                <!-- Category badge -->
+                                <c:choose>
+                                    <c:when test="${n.category == 'class_cancellation'}">
+                                        <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">Class Cancellation</span>
+                                    </c:when>
+                                    <c:when test="${n.category == 'holiday'}">
+                                        <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Holiday</span>
+                                    </c:when>
+                                    <c:when test="${n.category == 'maintenance'}">
+                                        <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20">Maintenance</span>
+                                    </c:when>
+                                    <c:when test="${n.category == 'event'}">
+                                        <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">Event</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">General</span>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <span class="text-[10px] text-zinc-500 uppercase tracking-wider font-medium">${n.authorRole}</span>
+                            </div>
+
+                            <h3 class="text-base font-bold text-white mb-2 line-clamp-2">${n.title}</h3>
+                            <p class="text-sm text-zinc-400 leading-relaxed line-clamp-3 mb-4 flex-grow">${n.message}</p>
+
+                            <div class="mt-auto flex items-center gap-3 text-xs text-zinc-500 pt-4 border-t border-zinc-800/50">
+                                <span class="font-medium text-zinc-400">${n.authorName}</span>
+                                <span>&middot;</span>
+                                <span>${n.createdAt}</span>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <div class="col-span-1 md:col-span-2 lg:col-span-3 bg-zinc-900/30 border border-zinc-800 rounded-2xl p-10 text-center">
+                        <div class="w-14 h-14 rounded-full bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        </div>
+                        <h3 class="text-zinc-300 font-semibold mb-1">No notices yet</h3>
+                        <p class="text-sm text-zinc-500">When staff or trainers post announcements, they'll appear here.</p>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </section>
 
 </main>
 

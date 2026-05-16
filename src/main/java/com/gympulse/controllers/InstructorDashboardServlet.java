@@ -3,6 +3,7 @@ package com.gympulse.controllers;
 import com.gympulse.model.UserModel;
 import com.gympulse.model.FitnessClassModel;
 import com.gympulse.service.ClassService;
+import com.gympulse.utils.NepaliCalendarUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -55,6 +56,17 @@ public class InstructorDashboardServlet extends HttpServlet {
         request.setAttribute("activeCount", activeCount);
         request.setAttribute("completedCount", completedCount);
         request.setAttribute("pageTitle", "Instructor Dashboard");
+
+        // Nepali Calendar Logic
+        NepaliCalendarUtils.NepaliDate nDate = NepaliCalendarUtils.convertToNepali(today);
+        int daysInMonth = NepaliCalendarUtils.getDaysInMonth(nDate.month);
+        LocalDate adStartOfMonth = NepaliCalendarUtils.getAdStartOfMonth(nDate.month);
+        int startDayOfWeek = adStartOfMonth.getDayOfWeek().getValue(); // 1 = Monday, 7 = Sunday
+        
+        request.setAttribute("nepaliDate", nDate);
+        request.setAttribute("daysInMonth", daysInMonth);
+        request.setAttribute("startDayOfWeek", startDayOfWeek);
+        request.setAttribute("todayDay", nDate.day);
 
         request.getRequestDispatcher("/WEB-INF/pages/instructor/dashboard.jsp").forward(request, response);
     }
