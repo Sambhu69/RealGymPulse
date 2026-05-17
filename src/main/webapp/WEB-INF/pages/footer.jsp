@@ -195,11 +195,13 @@
       'password_failed'      : 'Failed to update password.',
       // Admin — Classes
       'add_failed'           : 'Failed to add. Email / phone may already exist.',
+      'past_date'            : 'Cannot schedule a class in the past. Please choose today or a future date.',
       // Admin — Trainers
       'update_failed'        : 'Failed to update. Please try again.',
       'system_error'         : 'A system error occurred. Please try again.',
       // Member
       'alreadybooked'        : 'You have already booked this class.',
+      'class_full'           : 'This class is currently full.',
       'cancel_failed'        : 'Cancellation failed. Please try again.',
       'slot_unavailable'     : 'That time slot is no longer available.',
       'invalid_name'         : 'Invalid name. Use letters only.',

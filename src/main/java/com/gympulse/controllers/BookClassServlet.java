@@ -39,10 +39,15 @@ public class BookClassServlet extends HttpServlet {
             return;
         }
 
-        if (classService.bookClass(loggedUser.getUserId(), classId)) {
+        String result = classService.bookClass(loggedUser.getUserId(), classId);
+        if ("success".equals(result)) {
             response.sendRedirect(request.getContextPath() + "/member/dashboard?success=booked");
-        } else {
+        } else if ("class_full".equals(result)) {
+            response.sendRedirect(request.getContextPath() + "/member/dashboard?error=class_full");
+        } else if ("already_booked".equals(result)) {
             response.sendRedirect(request.getContextPath() + "/member/dashboard?error=alreadybooked");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/member/dashboard?error=system_error");
         }
     }
 

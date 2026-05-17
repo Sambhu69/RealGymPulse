@@ -1,11 +1,27 @@
 package com.gympulse.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 /**
  * ValidationUtil provides common data validation methods for the GymPulse application.
  */
 public class ValidationUtil {
+
+    /**
+     * Checks if a date string (yyyy-MM-dd) represents today or a future date.
+     * Returns false for past dates or unparseable strings.
+     */
+    public static boolean isFutureOrToday(String dateStr) {
+        if (dateStr == null || dateStr.trim().isEmpty()) return false;
+        try {
+            LocalDate date = LocalDate.parse(dateStr);
+            return !date.isBefore(LocalDate.now());
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
 
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final String NAME_REGEX = "^[a-zA-Z\\s]+$";

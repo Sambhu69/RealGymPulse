@@ -28,7 +28,7 @@ public class ClassService {
 
     public List<FitnessClassModel> getAvailableClasses() {
         List<FitnessClassModel> classes = new ArrayList<>();
-        String sql = "SELECT * FROM fitness_classes WHERE status = 'available' AND enrolled < capacity";
+        String sql = "SELECT * FROM fitness_classes WHERE status IN ('available', 'full') ORDER BY schedule_date, schedule_time";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql);
              ResultSet rs = pst.executeQuery()) {
@@ -92,9 +92,9 @@ public class ClassService {
     /**
      * Books a class for a user using a SQL transaction.
      */
-    public boolean bookClass(int userId, int classId) {
+    public String bookClass(int userId, int classId) {
         // 1. Check if already booked
-        if (isAlreadyBooked(userId, classId)) return false;
+        if (isAlreadyBooked(userId, classId)) return "already_booked";
 
         Connection conn = null;
         try {
@@ -111,13 +111,17 @@ public class ClassService {
                     int capacity = rs.getInt("capacity");
                     String status = rs.getString("status");
                     
-                    if (enrolled >= capacity || "full".equals(status) || "cancelled".equals(status)) {
+                    if (enrolled >= capacity || "full".equals(status)) {
                         conn.rollback();
-                        return false;
+                        return "class_full";
+                    }
+                    if ("cancelled".equals(status)) {
+                        conn.rollback();
+                        return "cancelled";
                     }
                 } else {
                     conn.rollback();
-                    return false;
+                    return "not_found";
                 }
             }
 
@@ -137,13 +141,13 @@ public class ClassService {
             }
 
             conn.commit();
-            return true;
+            return "success";
         } catch (SQLException e) {
             if (conn != null) {
                 try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             }
             e.printStackTrace();
-            return false;
+            return "failed";
         } finally {
             if (conn != null) {
                 try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }

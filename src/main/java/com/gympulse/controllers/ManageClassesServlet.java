@@ -83,6 +83,12 @@ public class ManageClassesServlet extends HttpServlet {
             return;
         }
 
+        // Reject past dates
+        if (!ValidationUtil.isFutureOrToday(scheduleDate)) {
+            response.sendRedirect(request.getContextPath() + "/admin/classes?error=past_date");
+            return;
+        }
+
         FitnessClassModel fc = new FitnessClassModel();
         fc.setClassName(className);
         fc.setInstructor(instructor);
@@ -111,6 +117,12 @@ public class ManageClassesServlet extends HttpServlet {
 
         if (!ValidationUtil.isNotEmpty(className) || !ValidationUtil.isPositiveNumber(capacityStr)) {
             response.sendRedirect(request.getContextPath() + "/admin/classes?error=invalid_data");
+            return;
+        }
+
+        // Reject past dates on update
+        if (ValidationUtil.isNotEmpty(scheduleDate) && !ValidationUtil.isFutureOrToday(scheduleDate)) {
+            response.sendRedirect(request.getContextPath() + "/admin/classes?error=past_date");
             return;
         }
 

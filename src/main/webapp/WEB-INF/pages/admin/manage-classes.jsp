@@ -50,7 +50,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-zinc-400 mb-1">Date</label>
-                        <input type="date" name="scheduleDate" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm transition-colors [color-scheme:dark]" required>
+                        <input type="date" name="scheduleDate" id="addScheduleDate" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm transition-colors [color-scheme:dark]" required>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-zinc-400 mb-1">Time</label>
@@ -135,7 +135,7 @@
                                             </div>
                                             <div>
                                                 <label class="block text-xs font-medium text-zinc-400 mb-1">Date</label>
-                                                <input type="date" name="scheduleDate" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm [color-scheme:dark]" value="${cls.scheduleDate}">
+                                                <input type="date" name="scheduleDate" class="gp-edit-date w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg focus:border-zinc-600 outline-none text-white text-sm [color-scheme:dark]" value="${cls.scheduleDate}">
                                             </div>
                                             <div>
                                                 <label class="block text-xs font-medium text-zinc-400 mb-1">Time</label>
@@ -202,6 +202,36 @@ function toggleEditForm(id) {
         form.classList.remove('table-row');
     }
 }
+</script>
+
+<script>
+// --- Date Validation: prevent past dates ---
+(function() {
+    var today = new Date().toISOString().split('T')[0];
+
+    // Set min on the Add form date input
+    var addDate = document.getElementById('addScheduleDate');
+    if (addDate) addDate.setAttribute('min', today);
+
+    // Set min on all Edit form date inputs
+    document.querySelectorAll('.gp-edit-date').forEach(function(el) {
+        el.setAttribute('min', today);
+    });
+
+    // Validate on form submit
+    document.querySelectorAll('form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            var dateInput = form.querySelector('input[name="scheduleDate"]');
+            if (dateInput && dateInput.value) {
+                if (dateInput.value < today) {
+                    e.preventDefault();
+                    alert('Cannot schedule a class in the past. Please choose today or a future date.');
+                    dateInput.focus();
+                }
+            }
+        });
+    });
+})();
 </script>
 </body>
 </html>

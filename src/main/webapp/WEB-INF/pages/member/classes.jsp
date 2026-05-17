@@ -25,7 +25,12 @@
         <c:when test="${not empty availableClasses}">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl">
                 <c:forEach items="${availableClasses}" var="cls">
-                    <div class="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-6 hover:bg-zinc-800/40 transition-all flex flex-col">
+                    <div class="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-6 hover:bg-zinc-800/40 transition-all flex flex-col relative overflow-hidden">
+                        <c:if test="${cls.enrolled >= cls.capacity}">
+                            <div class="absolute top-4 right-4 bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full tracking-wider">
+                                Full
+                            </div>
+                        </c:if>
                         <h4 class="text-xl font-bold text-white mb-4">${cls.className}</h4>
                         
                         <div class="space-y-2 mb-6 text-sm text-zinc-400 flex-grow">
@@ -40,7 +45,14 @@
                             </span>
                             <form action="${pageContext.request.contextPath}/member/book" method="POST">
                                 <input type="hidden" name="classId" value="${cls.classId}">
-                                <button type="submit" class="px-5 py-2 bg-white text-black font-bold text-sm rounded-xl hover:bg-zinc-200 transition-colors shadow-lg shadow-white/10">Book Now</button>
+                                <c:choose>
+                                    <c:when test="${cls.enrolled >= cls.capacity}">
+                                        <button type="submit" class="px-5 py-2 bg-zinc-800 hover:bg-red-500/10 text-zinc-400 hover:text-red-400 border border-zinc-700/50 hover:border-red-500/20 font-bold text-sm rounded-xl transition-all shadow-md">Class Full</button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button type="submit" class="px-5 py-2 bg-white text-black font-bold text-sm rounded-xl hover:bg-zinc-200 transition-colors shadow-lg shadow-white/10">Book Now</button>
+                                    </c:otherwise>
+                                </c:choose>
                             </form>
                         </div>
                     </div>

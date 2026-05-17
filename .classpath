@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<!-- Tomcat Core APIs to resolve 'jakarta' IDE imports -->
+	<classpathentry kind="lib" path="C:/GymPulse/tooling/apache-tomcat-10.1.20/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/GymPulse/tooling/apache-tomcat-10.1.20/lib/jsp-api.jar"/>
+	<!-- Local Project Libraries -->
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jakarta.servlet.jsp.jstl-3.0.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jakarta.servlet.jsp.jstl-api-3.0.0.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/mysql-connector-j-8.3.0.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
